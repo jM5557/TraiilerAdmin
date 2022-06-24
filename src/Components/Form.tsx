@@ -1,8 +1,10 @@
-import react, { SyntheticEvent, useState } from "react";
+import react, { SyntheticEvent, useState, useRef } from "react";
+import useOnClickOutside from "../hooks/useOnClickOutside";
 import { Categories } from "../lib/common";
 import { Category, Collection, Video } from "../lib/types";
 import { getThumbnail } from "./AddVideoForm";
 import FetchVideoForm from "./FetchVideoForm";
+import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
 
 interface FormProps {
     collection: Omit<Collection, "id">
@@ -12,15 +14,18 @@ const Form = (props: FormProps): JSX.Element => {
     const [collection, setCollection] = useState<typeof props.collection>(props.collection);
     const [submitted, setSubmitted] = useState<boolean>(false);
 
+    const dropDownRef = useRef<HTMLDivElement>(null);
     const [displayDropDown, setDisplayDropDown] = useState<boolean>(false);
+    useOnClickOutside(dropDownRef, () => setDisplayDropDown(false));
     const DropDown: JSX.Element = (
-        <div className="dropdown-wrapper">
+        <div className="dropdown-wrapper" ref = { dropDownRef }>
             <button 
                 type="button" 
                 className="selected flex x-between y-center"
                 onClick={ () => setDisplayDropDown(!displayDropDown) }
             >
                 <span>{ Categories[collection.categoryId].text }</span>
+                <CaretDown />
             </button>
             { (displayDropDown) &&
                 <div className="dropdown">
@@ -49,13 +54,22 @@ const Form = (props: FormProps): JSX.Element => {
             }
         </div>
     );
-
+    
+    const videoBoxRef = useRef<HTMLDivElement>(null);
     const [displayVideoBox, setDisplayVideoBox] = useState<boolean>(false);
+    useOnClickOutside(videoBoxRef, () => setDisplayVideoBox(false))
     const VideoBox: JSX.Element = (
-        <div className="video-box">
+        <div className="video-box" ref = { videoBoxRef }>
             <FetchVideoForm 
                 callbackFn={ (v: Video) => addVideo(v) }
             />
+            <button
+                type = "button"
+                className="cancel-btn"
+                onClick={
+                    () => setDisplayVideoBox(false)
+                }
+            >Cancel</button>
         </div>
     );
 
@@ -181,15 +195,17 @@ const Form = (props: FormProps): JSX.Element => {
                             (v: Video, index: number) => (
                                 <div className="list-item">
                                     <img alt = { v.title } src = { `${ getThumbnail(v.id, v.sourceTypeId) }` } />
-                                    <h1>{ v.title }</h1>
-                                    <button
-                                        type = "button"
-                                        onClick={
-                                            () => deleteVideo(v.id)
-                                        }
-                                    >
-                                        Delete
-                                    </button>
+                                    <div className="details">
+                                        <h1>{ v.title }</h1>
+                                        <button
+                                            type = "button"
+                                            onClick={
+                                                () => deleteVideo(v.id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             )
                         )

@@ -2,6 +2,7 @@ import react, { useState, useEffect, SyntheticEvent } from "react";
 import youtubeAPI from "../api/youtube";
 import { getVideoId } from "../lib/helpers";
 import { getThumbnail } from "./AddVideoForm";
+import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg"; 
 
 interface FetchVideoFormProps {
     callbackFn: Function
@@ -56,9 +57,15 @@ export default ({ callbackFn, ...props }: FetchVideoFormProps): JSX.Element => {
                             () => fetchVideo(url)
                         }
                     >
-                        Search
+                        <SearchIcon className="search-icon" />
+                        <span className="hidden">
+                            Search
+                        </span>
                     </button>
                 </div>
+                { (id) &&
+                    <pre>ID: { id }</pre>
+                }
 
                 <div className="mid-input-wrapper">
                     <label>
