@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #BEBEBE;
+  background-color: #ffffff;
 }
 
 code {
@@ -14,7 +14,13 @@ code {
     monospace;
 }
 
-label {
+button {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+/* label {
   display: block;
 }
 
@@ -139,4 +145,303 @@ label input[type="text"] {
     display: table;
     margin: 48px auto;
   }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex.col {
+  flex-direction: column;
+}
+
+.x-between {
+  justify-content: space-between;
+}
+
+.x-start {
+  justify-content: start;
+}
+
+.y-center {
+  align-items: center;
+}
+
+.fetch-video-form {
+  margin-top: 16px;
+}
+
+.fetch-video-form label {
+  flex: 2 1;
+}
+
+.fetch-video-form label input[type="text"]{
+  box-sizing: border-box;
+}
+
+.fetch-video-form button {
+  flex: 1 1;
+  border: none;
+  box-sizing: border-box;
+  background-color: rgb(43, 233, 43);
+  color: rgb(15, 54, 15);
+  padding: 16px;
+  border-radius: 4px;
+  margin-left: 8px;
+  cursor: pointer;
+} */
+
+.form-wrapper {
+  padding: 32px;
+  max-width: 1280px;
+  margin: auto;
+}
+
+.top-header {
+  margin-bottom: 32px;
+}
+
+.top-header h1 {
+  font-size: 2rem;
+}
+
+.submit-btn {
+  background-color: rgb(43, 233, 43);
+  color: rgb(15, 54, 15);
+  padding: 12px 48px;
+  border-radius: 4px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex.col {
+  flex-direction: column;
+}
+
+.x-between {
+  justify-content: space-between;
+}
+
+.x-start {
+  justify-content: flex-start;
+}
+
+.x-center {
+  justify-content: center;
+}
+
+.y-center {
+  align-items: center;
+}
+
+.y-end {
+  align-items:flex-end;
+}
+
+.input-wrapper .title b {
+  display: table;
+  font-size: small;
+  margin-bottom: 4px;
+}
+
+.input-wrapper .title input[type="text"] {
+  padding: 12px 16px;
+  background-color: rgb(194, 191, 191);
+  color: #111;
+  border: none;
+  border-radius: 4px;
+  min-width: 320px;
+}
+
+.dropdown-wrapper {
+  position: relative;
+  margin-left: 16px;
+}
+
+.dropdown-wrapper .selected {
+  padding: 12px 16px;
+  background-color: rgb(79, 79, 255);
+  color: #FFF;
+  border-radius: 4px;
+  min-width: 180px;
+}
+
+.dropdown-wrapper .dropdown button {
+  white-space: nowrap;
+  display: block;
+  padding: 12px 16px;
+  background-color: transparent;
+  color: #FFF;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: unset;
+}
+
+.dropdown-wrapper .dropdown button:hover {
+  background-color: rgb(79, 79, 255);
+}
+
+.dropdown-wrapper .dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background-color: rgb(79, 79, 140);
+  color: #FFF;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.video-box-wrapper {
+  position: relative;
+}
+
+.add-video-btn {
+  background-color: rgb(230, 33, 230);
+  color: #FFF;
+  padding: 12px 48px;
+  border-radius: 4px;
+  margin-right: 8px;
+}
+
+.video-box {
+  position: absolute;
+  margin-top: 8px;
+  border-radius: 8px;
+  background-color: rgb(40, 40, 40);
+  color: #FFF;
+  overflow: hidden;
+  right: 0px;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(40, 40, 40);
+  z-index: -1;
+}
+
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  opacity: 0.25;
+  background-size: cover !important;
+}
+
+.form-body {
+  position: relative;
+  z-index: 1;
+}
+
+.fetch-video-form {
+  padding: 16px;
+}
+
+.fetch-video-form .top-input-wrapper label {
+  flex: 2 1;
+}
+
+.top-input-wrapper {
+  background-color: hsl(0, 0%, 25%);
+  color: #FFF;
+  overflow-x: hidden;
+  border-radius: 4px;
+}
+
+.top-input-wrapper label input {
+  background-color: transparent;
+  color: #FFF;
+  padding: 12px 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.fetch-video-form .top-input-wrapper button {
+  flex: 1;
+  background-color: transparent;
+  color: #111;
+  padding: 12px 32px;
+  border-radius: 0px;
+  background-color:rgb(78, 250, 221);
+}
+
+.mid-input-wrapper {
+  margin-top: 75px;
+}
+
+.mid-input-wrapper label {
+  border-left: solid 2px #FFF;
+  display: block;
+  padding-left: 8px;
+}
+
+.mid-input-wrapper label b {
+  font-size: small;
+  display: table;
+  margin-bottom: 4px;
+}
+
+.mid-input-wrapper label input {
+  background-color: transparent;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  border: none;
+  font-size: 1.5rem;
+  color: #FFF;
+}
+
+.mid-input-wrapper .submit-btn {
+  display: block;
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mid-input-wrapper .submit-btn.submitted {
+  background-color: lightgray;
+  color: #111;
+}
+
+.videos-section {
+  margin-top: 80px;
+}
+
+.videos-section .top {
+  padding: 24px 0px;
+}
+
+.videos-section .top > span {
+  font-size: small;
+  font-weight: bolder;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.list-item {
+  position: relative;
+}
+
+.list-item img {
+  width: 100%;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.list-item h1 {
+  font-size: small;
+  margin-top: 0px;
 }

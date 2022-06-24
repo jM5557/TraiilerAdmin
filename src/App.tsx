@@ -1,6 +1,8 @@
 import './App.css';
 import { SyntheticEvent, useState } from 'react';
 import AddVideoForm from './Components/AddVideoForm';
+import FetchVideoForm from './Components/FetchVideoForm';
+import Form from './Components/Form';
 
 interface Video {
   url: string,
@@ -14,24 +16,24 @@ interface Category {
   text: string
 }
 let categories: Category[] = [
-  { id: 0, text: "Video Games"},
-  { id: 1, text: "Movies"},
-  { id: 2, text: "TV-Shows"}
+  { id: 0, text: "Video Games" },
+  { id: 1, text: "Movies" },
+  { id: 2, text: "TV-Shows" }
 ]
 
 export const getThumbnail: Function = (urlId: string, sourceTypeId: number): string => {
   return (sourceTypeId === 0)
-      ? `https://img.youtube.com/vi/${urlId}/mqdefault.jpg`
-      : `https://vumbnail.com/${urlId}.jpg`
+    ? `https://img.youtube.com/vi/${urlId}/mqdefault.jpg`
+    : `https://vumbnail.com/${urlId}.jpg`
 }
 
 function App() {
   const [id, setId] = useState<string | null>(null);
-  
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [categoryId, setCategoryId] = useState<number>(0);
-  
+
   const [video, setVideo] = useState<Video>({
     url: "",
     id: null,
@@ -52,165 +54,183 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <div className='panels'>
+    <div>
+      <Form 
+        collection={{
+          title: "",
+          videos: [],
+          categoryId: 0
+        }}
+      />
+      {/* <div className='panels'>
         <div className="panel">
-            <div className="inner-form">
-              <h1>Create Item</h1>
-              <label>
-                <b>Title</b>
-                <input
-                  type = "text"
-                  name = "title"
-                  value = { title }
-                  onChange = { (e: SyntheticEvent) => setTitle((e.target as HTMLInputElement).value) }
-                />
-              </label>
+          <div className="inner-form">
+            <h1>Create Item</h1>
+            <label>
+              <b>Title</b>
+              <input
+                type="text"
+                name="title"
+                value={title}
+                onChange={(e: SyntheticEvent) => setTitle((e.target as HTMLInputElement).value)}
+              />
+            </label>
 
-              <div className="radio-labels">
+            <div className="radio-labels">
               {
                 categories.map((c: Category, index: number) => {
                   return (
-                    <button 
-                      type = "button"
-                      className={`radio-label ${ categoryId === Number(c.id) ? "selected" : "" }`}
+                    <button
+                      type="button"
+                      className={`radio-label ${categoryId === Number(c.id) ? "selected" : ""}`}
                       key={index}
-                      onClick={ () => setCategoryId(c.id) }
+                      onClick={() => setCategoryId(c.id)}
                     >
-                      <span>{ c.text }</span>
+                      <span>{c.text}</span>
                     </button>
-                    
                   )
                 })
               }
-              </div>
+            </div>
             <div className="container">
               <div className='inner-content'>
-              { (video.id) &&
-                (
-                  <img alt = "video thumbnail" src = { getThumbnail(video.id, video.sourceTypeId) } />
+                {(video.id) &&
+                  (
+                    <img alt="video thumbnail" src={getThumbnail(video.id, video.sourceTypeId)} />
                   )
-              }
-            </div>
-            <div className="inner-video">
-              <label>
-                <b>Video URL</b>
-                <input 
-                  type = "text"
-                  name = "url"
-                  value = { video.url }
-                  onChange = {
-                    (e: SyntheticEvent) => {
-                      let url: string = (e.target as HTMLInputElement).value;
-                      const match_yt: RegExpMatchArray | null = url.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)/);
-                      const match_vimeo: RegExpMatchArray | null = url.match(/^(http(s)?:\/\/)?((w){3}.)?vimeo?(\.com)/);
-                      
-                      let sourceTypeId: 0 | 1 = video.sourceTypeId;
-                      
-                      if (match_yt) sourceTypeId = 0;
-                      else if (match_vimeo) sourceTypeId = 1;
-                      else sourceTypeId = 0;
-
-                      setVideo({ ...video, url, id: getVideoId(url), sourceTypeId });
+                }
+              </div>
+              <div className="inner-video">
+                <FetchVideoForm
+                  callbackFn={
+                    (data: any, id: string) => {
+                      setVideo({
+                        id,
+                        url: `https://youtube.com/watch?v=${id}`,
+                        title: data.items[0].snippet.title as string,
+                        sourceTypeId: 0
+                      });
                     }
                   }
                 />
-              </label>
-              <label>
-                <b>Video Title</b>
-                <input 
-                  type = "text"
-                  name = "title"
-                  value = { video.title as string }
-                  onChange = {
-                    (e: SyntheticEvent) => {
-                      let title: string = (e.target as HTMLInputElement).value
+                <label>
+                  <b>Video URL</b>
+                  <input
+                    type="text"
+                    name="url"
+                    value={video.url}
+                    onChange={
+                      (e: SyntheticEvent) => {
+                        let url: string = (e.target as HTMLInputElement).value;
+                        const match_yt: RegExpMatchArray | null = url.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)/);
+                        const match_vimeo: RegExpMatchArray | null = url.match(/^(http(s)?:\/\/)?((w){3}.)?vimeo?(\.com)/);
 
-                      setVideo({ ...video, title });
+                        let sourceTypeId: 0 | 1 = video.sourceTypeId;
+
+                        if (match_yt) sourceTypeId = 0;
+                        else if (match_vimeo) sourceTypeId = 1;
+                        else sourceTypeId = 0;
+
+                        setVideo({ ...video, url, id: getVideoId(url), sourceTypeId });
+                      }
                     }
-                  }
-                />
-              </label>
-              { (video.id) &&
-                <p>Video ID: { video.id }</p>
-              }
-            </div>
+                  />
+                </label>
+                <label>
+                  <b>Video Title</b>
+                  <input
+                    type="text"
+                    name="title"
+                    value={video.title as string}
+                    onChange={
+                      (e: SyntheticEvent) => {
+                        let title: string = (e.target as HTMLInputElement).value
+
+                        setVideo({ ...video, title });
+                      }
+                    }
+                  />
+                </label>
+                {(video.id) &&
+                  <p>Video ID: {video.id}</p>
+                }
+              </div>
             </div>
             <div className="radio-labels">
-              <button 
-                type = "button"
-                className={`radio-label ${ video.sourceTypeId === Number(0) ? "selected" : "" }`}
-                onClick={ () => setVideo({ ...video, sourceTypeId: 0 }) }
+              <button
+                type="button"
+                className={`radio-label ${video.sourceTypeId === Number(0) ? "selected" : ""}`}
+                onClick={() => setVideo({ ...video, sourceTypeId: 0 })}
               >
                 <span>YouTube</span>
               </button>
-              <button 
+              <button
                 type='button'
-                className={`radio-label ${ video.sourceTypeId === Number(1) ? "selected" : "" }`}
-                onClick={ () => setVideo({ ...video, sourceTypeId: 1 }) }
+                className={`radio-label ${video.sourceTypeId === Number(1) ? "selected" : ""}`}
+                onClick={() => setVideo({ ...video, sourceTypeId: 1 })}
               >
                 <span>Vimeo</span>
               </button>
             </div>
-              { (title 
-                  && (video.title && video.id && video.title)
-                ) &&
-                <button 
-                  type = "button" 
-                  className={ `submit ${ (isSubmitting) ? 'submitting' : '' }` }
-                  disabled = { (isSubmitting) }
-                  onClick={
-                    async (e: SyntheticEvent) => {
-                      e.preventDefault();
-                      setIsSubmitting(true);
+            {(title
+              && (video.title && video.id && video.title)
+            ) &&
+              <button
+                type="button"
+                className={`submit ${(isSubmitting) ? 'submitting' : ''}`}
+                disabled={(isSubmitting)}
+                onClick={
+                  async (e: SyntheticEvent) => {
+                    e.preventDefault();
+                    setIsSubmitting(true);
 
-                      try {
-                        let results = await fetch("https://traiiler.herokuapp.com/add/item", {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json"
-                          },
-                          body: JSON.stringify({
-                            item: { title, categoryId },
-                            video: {
-                              urlId: video.id,
-                              title: video.title,
-                              url: video.url,
-                              sourceTypeId: video.sourceTypeId
-                            }
-                          })
-                        });
-                        
-                        let r = await results.json();
-                        setIsSubmitting(false);
-                        setTitle("");
-                        setCategoryId(0);
-                        setVideo({
-                          title: "",
-                          url: "",
-                          id: "",
-                          sourceTypeId: 0
-                        });
+                    try {
+                      let results = await fetch("https://traiiler.herokuapp.com/add/item", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                          item: { title, categoryId },
+                          video: {
+                            urlId: video.id,
+                            title: video.title,
+                            url: video.url,
+                            sourceTypeId: video.sourceTypeId
+                          }
+                        })
+                      });
 
-                        setId(r.id);
-                      }
-                      catch (err) {
-                        console.log(err);
-                        setIsSubmitting(false);
-                      }
+                      let r = await results.json();
+                      setIsSubmitting(false);
+                      setTitle("");
+                      setCategoryId(0);
+                      setVideo({
+                        title: "",
+                        url: "",
+                        id: "",
+                        sourceTypeId: 0
+                      });
+
+                      setId(r.id);
+                    }
+                    catch (err) {
+                      console.log(err);
+                      setIsSubmitting(false);
                     }
                   }
-                >
-                  Submit
-                </button>
-              }
-            </div>
+                }
+              >
+                Submit
+              </button>
+            }
           </div>
         </div>
-        <div className="panel">
-          <AddVideoForm itemId={id ?? ""} />
-        </div>
       </div>
+      <div className="panel">
+        <AddVideoForm itemId={id ?? ""} />
+      </div> */}
+    </div>
   );
 }
 
