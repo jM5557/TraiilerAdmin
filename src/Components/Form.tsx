@@ -5,6 +5,7 @@ import { Category, Collection, Video } from "../lib/types";
 import { getThumbnail } from "./AddVideoForm";
 import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
+import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
 
 interface FormProps {
     collection: Omit<Collection, "id">
@@ -13,6 +14,44 @@ interface FormProps {
 const Form = (props: FormProps): JSX.Element => {
     const [collection, setCollection] = useState<typeof props.collection>(props.collection);
     const [submitted, setSubmitted] = useState<boolean>(false);
+    const [submitType, setSubmitType] = useState<"EDIT" | "CREATE">("CREATE");
+
+    const [collectionId, setCollectionId] = useState<number | null>(null);
+    const loadCollection: Function = async (id: number) => {
+        try {
+            let results = await fetch(
+                `https://traiiler.herokuapp.com/edit/collection?id=${ collectionId }`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            let data = await results.json();
+            
+            // TESTING
+            // let data = {
+            //     title: "Foobar",
+            //     videos: [{ id: "fsdlkfml", title: "dd", sourceTypeId: 0, url: "dsldsaa" }],
+            //     categoryId: 2
+            // }
+
+            setCollection({
+                title: data.title,
+                videos: data.videos,
+                categoryId: data.categoryId
+            });
+
+            setDcVideos([]);
+        }
+        catch (err: any) {
+            console.log(err);
+        }
+    }
+
+    const [dcVideos, setDcVideos] = useState<string[]>([]);
 
     const dropDownRef = useRef<HTMLDivElement>(null);
     const [displayDropDown, setDisplayDropDown] = useState<boolean>(false);
@@ -90,17 +129,61 @@ const Form = (props: FormProps): JSX.Element => {
                 (v: Video) => v.id !== id 
             ))
         })
+
+        if (submitType === "EDIT")
+            setDcVideos([
+                ...dcVideos,
+                id
+            ]);
     }
 
     return (
         <div className="form-wrapper">
             <header className="flex y-center x-between top-header">
                 <h1>
-                    Add a Collection
+                    Modify/Create a Collection
                 </h1>
+                <button 
+                    className="toggle"
+                    onClick={
+                        () => setSubmitType(
+                            (submitType === "CREATE") 
+                                ? "EDIT" 
+                                : "CREATE"
+                        )
+                    }
+                >
+                    { (submitType === "CREATE") 
+                                ? "Edit" 
+                                : "Create" }
+                </button>
             </header>
             <div className="inner-form flex y-center x-between">
                 <div className="input-wrapper flex x-start y-end">
+                    { (submitType === "EDIT") &&
+                        <div className="collection-id-wrapper">
+                            <label className="collection-id">
+                                <b>Collection ID</b>
+                                <input type = "number" 
+                                    value={ "" + collectionId }
+                                    onChange = {
+                                        (e: SyntheticEvent) => {
+                                            setCollectionId(Number((e.target as HTMLInputElement).value))
+                                        }
+                                    }
+                                />
+                            </label>
+                            <button
+                                type = "button"
+                                onClick={
+                                    () => loadCollection(collectionId)
+                                }
+                            >
+                                <SearchIcon />
+                                <span className="hidden">Search</span>
+                            </button>
+                        </div>
+                    }
                     <label className="title">
                         <b>Title</b>
                         <input type = "text" 
@@ -144,43 +227,80 @@ const Form = (props: FormProps): JSX.Element => {
                                 onClick={
                                     async (e: SyntheticEvent) => {
                                         e.preventDefault();
-                                        
                                         if (submitted) return;
-
                                         setSubmitted(true);
 
-                                        try {
-                                            await fetch(
-                                                "https://traiiler.herokuapp.com/add/item", 
-                                                {
-                                                    method: "POST",
-                                                    headers: {
-                                                    "Content-Type": "application/json"
-                                                    },
-                                                    body: JSON.stringify({
-                                                        item: { 
-                                                            title: collection.title.trim(), 
-                                                            categoryId: collection.categoryId 
+                                        if (submitType === "CREATE") {
+                                            try {
+                                                await fetch(
+                                                    "https://traiiler.herokuapp.com/add/item", 
+                                                    {
+                                                        method: "POST",
+                                                        headers: {
+                                                        "Content-Type": "application/json"
                                                         },
-                                                        videos: (
-                                                            collection.videos.map(
-                                                                (v: Video) => ({
-                                                                    urlId: v.id,
-                                                                    title: v.title,
-                                                                    url: v.url,
-                                                                    sourceTypeId: v.sourceTypeId
-                                                                })
+                                                        body: JSON.stringify({
+                                                            item: { 
+                                                                title: collection.title.trim(), 
+                                                                categoryId: collection.categoryId 
+                                                            },
+                                                            videos: (
+                                                                collection.videos.map(
+                                                                    (v: Video) => ({
+                                                                        urlId: v.id,
+                                                                        title: v.title,
+                                                                        url: v.url,
+                                                                        sourceTypeId: v.sourceTypeId
+                                                                    })
+                                                                )
                                                             )
-                                                        )
-                                                    })
-                                                }
-                                            );
-                                            setSubmitted(false);
+                                                        })
+                                                    }
+                                                );
+                                                setSubmitted(false);
+                                            }
+                                            catch (err: any) {
+                                                setSubmitted(false);
+                                                console.log(err);
+                                            }
                                         }
-                                        catch (err: any) {
-                                            setSubmitted(false);
-                                            console.log(err);
+                                        else {
+                                            try {
+                                                await fetch(
+                                                    "https://traiiler.herokuapp.com/edit/collection", 
+                                                    {
+                                                        method: "POST",
+                                                        headers: {
+                                                        "Content-Type": "application/json"
+                                                        },
+                                                        body: JSON.stringify({
+                                                            item: {
+                                                                id: collectionId,
+                                                                title: collection.title.trim(), 
+                                                                categoryId: collection.categoryId 
+                                                            },
+                                                            videos: (
+                                                                collection.videos.map(
+                                                                    (v: Video) => ({
+                                                                        urlId: v.id,
+                                                                        title: v.title,
+                                                                        url: v.url,
+                                                                        sourceTypeId: v.sourceTypeId
+                                                                    })
+                                                                )
+                                                            ),
+                                                            disconnectedVideos: dcVideos
+                                                        })
+                                                    }
+                                                );
+                                                setSubmitted(false);
+                                            }
+                                            catch (err: any) {
+                                                setSubmitted(false);
+                                                console.log(err);
+                                            }
                                         }
+
                                     }
                                 }
                             >

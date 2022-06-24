@@ -8,7 +8,7 @@ interface Video {
   url: string,
   id: string | null,
   title: string | null,
-  sourceTypeId: 0 | 1
+  sourceTypeId: number
 }
 
 interface Category {

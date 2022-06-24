@@ -4,7 +4,7 @@ interface Video {
     url: string,
     id: string | null,
     title: string | null,
-    sourceTypeId: 0 | 1
+    sourceTypeId: number
 }
 
 export const getThumbnail: Function = (urlId: string, sourceTypeId: number): string => {
@@ -74,7 +74,7 @@ const AddVideoForm = (props: { itemId: string }): JSX.Element => {
                                         const match_yt: RegExpMatchArray | null = url.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)/);
                                         const match_vimeo: RegExpMatchArray | null = url.match(/^(http(s)?:\/\/)?((w){3}.)?vimeo?(\.com)/);
 
-                                        let sourceTypeId: 0 | 1 = video.sourceTypeId;
+                                        let sourceTypeId: number = video.sourceTypeId;
 
                                         if (match_yt) sourceTypeId = 0;
                                         else if (match_vimeo) sourceTypeId = 1;

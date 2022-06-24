@@ -2,7 +2,7 @@ export interface Video {
     title: string,
     id: string,
     url: string,
-    sourceTypeId: 0 | 1
+    sourceTypeId: number
 }
 
 export interface Collection {
