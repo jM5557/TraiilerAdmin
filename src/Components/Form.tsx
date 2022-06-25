@@ -6,6 +6,7 @@ import { getThumbnail } from "./AddVideoForm";
 import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
+import axios from "axios";
 
 interface FormProps {
     collection: Omit<Collection, "id">
@@ -19,17 +20,11 @@ const Form = (props: FormProps): JSX.Element => {
     const [collectionId, setCollectionId] = useState<number | null>(null);
     const loadCollection: Function = async (id: number) => {
         try {
-            let results = await fetch(
-                `https://traiiler.herokuapp.com/edit/collection?id=${ collectionId }`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }
+            let results = await axios.get(
+                `https://traiiler.herokuapp.com/edit/collection/${ collectionId }`
             );
 
-            let data = await results.json();
+            let data = await results.data;
             
             // TESTING
             // let data = {
