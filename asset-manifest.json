@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/TraiilerAdmin/static/css/main.c470a0d0.css",
-    "main.js": "/TraiilerAdmin/static/js/main.88e4933e.js",
+    "main.js": "/TraiilerAdmin/static/js/main.4ac36929.js",
     "static/js/787.bf0daf95.chunk.js": "/TraiilerAdmin/static/js/787.bf0daf95.chunk.js",
     "index.html": "/TraiilerAdmin/index.html",
     "static/media/search-icon.svg": "/TraiilerAdmin/static/media/search-icon.6c5a8240c6ae7b24df0a9785f20bcb08.svg",
     "static/media/caret-down.svg": "/TraiilerAdmin/static/media/caret-down.da95f10ebaf3f17151e17b8c29df9604.svg",
     "main.c470a0d0.css.map": "/TraiilerAdmin/static/css/main.c470a0d0.css.map",
-    "main.88e4933e.js.map": "/TraiilerAdmin/static/js/main.88e4933e.js.map",
+    "main.4ac36929.js.map": "/TraiilerAdmin/static/js/main.4ac36929.js.map",
     "787.bf0daf95.chunk.js.map": "/TraiilerAdmin/static/js/787.bf0daf95.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c470a0d0.css",
-    "static/js/main.88e4933e.js"
+    "static/js/main.4ac36929.js"
   ]
 }
