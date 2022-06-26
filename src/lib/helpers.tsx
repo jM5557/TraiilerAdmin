@@ -12,4 +12,10 @@ export const getVideoId = (url: string, sourceTypeId: number = 0): string | null
         return match[1];
     else
         return null;
-};
+}
+
+export const getThumbnail: Function = (urlId: string, sourceTypeId: number): string => {
+    return (sourceTypeId === 0)
+        ? `https://img.youtube.com/vi/${urlId}/mqdefault.jpg`
+        : `https://vumbnail.com/${urlId}.jpg`
+}

@@ -2,7 +2,7 @@ import react, { SyntheticEvent, useState, useRef } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import { Categories } from "../lib/common";
 import { Category, Collection, Video } from "../lib/types";
-import { getThumbnail } from "./AddVideoForm";
+import { getThumbnail } from "../lib/helpers";
 import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
@@ -93,7 +93,7 @@ const Form = (props: FormProps): JSX.Element => {
     const [displayVideoBox, setDisplayVideoBox] = useState<boolean>(false);
     useOnClickOutside(videoBoxRef, () => setDisplayVideoBox(false))
     const VideoBox: JSX.Element = (
-        <div className="video-box" ref = { videoBoxRef }>
+        <div className="video-box">
             <FetchVideoForm 
                 callbackFn={ (v: Video) => addVideo(v) }
             />
@@ -199,7 +199,7 @@ const Form = (props: FormProps): JSX.Element => {
                     <span>{collection.videos.length} Video(s)</span>
                     
                     <div className="flex y-center x-between">
-                        <div className="video-box-wrapper">
+                        <div className="video-box-wrapper" ref = { videoBoxRef }>
                             <button
                                 type = "button"
                                 className="add-video-btn"
