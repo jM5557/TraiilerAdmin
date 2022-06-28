@@ -36,7 +36,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "https://traiiler.herokuapp.com/",
+  "proxy": "https://traiiler.herokuapp.com",
   "browserslist": {
     "production": [
       ">0.2%",

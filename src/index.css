@@ -284,7 +284,11 @@ button {
 }
 
 .videos-section .top {
-  padding: 24px 0px;
+  padding: 12px 0px;
+  position: sticky;
+  top: 0;
+  background-color: #FFF;
+  margin-bottom: 12px;
 }
 
 .videos-section .top > span {
@@ -401,4 +405,32 @@ button {
   .inner-form {
     z-index: 2;
   }
+}
+
+.video-organizerr {
+  position: fixed;
+  top: 20px;
+  bottom: 20px;
+  border-radius: 16px;
+  box-shadow: -4px 4px 12px -4px #111;
+}
+
+.video-organizer {
+  display: block;
+}
+
+.video-organizer .video {
+  padding: 18px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.video-organizer .video img {
+  width: 160px;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+
+.video-organizer .video.selected {
+  border: solid 3px rgb(78, 250, 221);
 }

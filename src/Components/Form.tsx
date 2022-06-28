@@ -7,6 +7,7 @@ import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
 import axios from "axios";
+import { VideoOrganizer } from "./VideoOrganizer";
 
 interface FormProps {
     collection: Omit<Collection, "id">
@@ -261,6 +262,8 @@ const Form = (props: FormProps): JSX.Element => {
                                         }
                                         else {
                                             try {
+                                                // http://localhost:5000
+                                                // https://traiiler.herokuapp.com
                                                 await fetch(
                                                     "https://traiiler.herokuapp.com/edit/collection", 
                                                     {
@@ -308,7 +311,7 @@ const Form = (props: FormProps): JSX.Element => {
                     {
                         collection.videos.map(
                             (v: Video, index: number) => (
-                                <div className="list-item">
+                                <div className="list-item" key = { index }>
                                     <img alt = { v.title } src = { `${ getThumbnail(v.id, v.sourceTypeId) }` } />
                                     <div className="details">
                                         <h1>{ v.title }</h1>
@@ -327,6 +330,21 @@ const Form = (props: FormProps): JSX.Element => {
                     }
                 </div>
             </section>
+            { (collection.videos.length > 0) &&
+                <section>
+                    <VideoOrganizer 
+                        videos={collection.videos}
+                        callbackFn = {
+                            (videos: Video[]) => {
+                                setCollection({
+                                    ...collection,
+                                    videos
+                                });
+                            }
+                        }
+                    />
+                </section>
+            }
         </div>
     )
 }
