@@ -14,6 +14,15 @@ code {
     monospace;
 }
 
+html,
+body {
+  font-family: "open sans", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, button {
+  font-family: 'Montserrat', sans-serif;
+}
+
 button {
   border: none;
   cursor: pointer;
@@ -39,7 +48,7 @@ button {
   background-color: rgb(43, 233, 43);
   color: rgb(15, 54, 15);
   padding: 12px 48px;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .flex {
@@ -63,6 +72,10 @@ button {
   justify-content: center;
 }
 
+.x-end {
+  justify-content: flex-end;
+}
+
 .y-center {
   align-items: center;
 }
@@ -71,15 +84,28 @@ button {
   align-items:flex-end;
 }
 
-.input-wrapper .title b {
+.input-wrapper {
+  margin-bottom: 16px;
+}
+
+.input-wrapper .label {
+  background-color: #e7e7e7;
+  border-radius: 12px;
+  padding: 8px 16px 8px;
+}
+
+.input-wrapper .label b {
   display: table;
   font-size: small;
   margin-bottom: 4px;
+  color: #414141;
 }
 
-.input-wrapper .title input[type="text"] {
-  padding: 12px 16px;
-  background-color: rgb(194, 191, 191);
+.input-wrapper .label input[type="text"],
+.input-wrapper .label input[type="number"] {
+  padding: 8px 8px;
+  font-size: 1.25rem;
+  background-color: transparent;
   color: #111;
   border: none;
   border-radius: 4px;
@@ -88,7 +114,9 @@ button {
 
 .dropdown-wrapper {
   position: relative;
-  margin-left: 16px;
+  display: table;
+  margin-left: auto;
+  margin-right: 0px;
 }
 
 .dropdown-wrapper .selected svg {
@@ -97,10 +125,10 @@ button {
 }
 
 .dropdown-wrapper .selected {
-  padding: 12px 16px;
+  padding: 18px 32px;
   color: #FFF;
   background-color: hsl(0 0% 22%);
-  border-radius: 4px;
+  border-radius: 8px;
   min-width: 180px;
 }
 
@@ -126,25 +154,20 @@ button {
   margin-top: 8px;
   background-color: hsl(0 0% 10%);
   color: #FFF;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
+  z-index: 2;
 }
 
 .collection-id-wrapper {
   margin-right: 16px;
 }
 
-.collection-id-wrapper label b {
-  font-size: small;
-  display: table;
-  margin-bottom: 4px;
-}
-
 .collection-id-wrapper button {
   display: block;
   background-color:rgb(78, 250, 221);
   color:hsl(0, 0%, 25%);
-  border-radius: 4px;
+  border-radius: 8px;
   margin-top: 4px;
   width: 100%;
   box-sizing: border-box;
@@ -154,17 +177,32 @@ button {
   width: 24px;
 }
 
+.collection-id svg {
+  width: 24px;
+  height: 24px;
+  flex: 1 1;
+}
+
+.collection-id label {
+  flex: 2 1;
+}
+
+.collection-id button {
+  margin-left: -56px;
+  padding: 8px 16px;
+  border-radius: 0px 12px 12px 0px;
+  background-color: #e7e7e7;
+}
+
 .video-box-wrapper {
   position: relative;
-  z-index: 10;
 }
 
 .add-video-btn {
   background-color: hsl(525 83% 42%);
   color: hsl(0 0% 22%);
-  padding: 12px 48px;
-  border-radius: 4px;
-  margin-right: 8px;
+  padding: 14px 48px;
+  border-radius: 8px;
 }
 
 .video-box {
@@ -175,6 +213,8 @@ button {
   color: #FFF;
   overflow: hidden;
   right: 0px;
+  min-width: 360px;
+  padding-bottom: 16px;
 }
 
 .overlay {
@@ -215,16 +255,21 @@ button {
   background-color: hsl(0, 0%, 25%);
   color: #FFF;
   overflow-x: hidden;
-  border-radius: 4px;
+  border-radius: 8px;
   align-items: stretch;
+  margin-top: 40px;
 }
 
 .top-input-wrapper label input {
   background-color: transparent;
   color: #FFF;
   padding: 12px 8px;
+  font-size: 1rem;
   border-radius: 4px;
   border: none;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .top-input-wrapper + pre {
@@ -234,7 +279,7 @@ button {
 
 .fetch-video-form .top-input-wrapper button {
   flex: 1;
-  background-color: transparent;
+  max-width: 64px;
   color: #111;
   padding: 4px 8px;
   border-radius: 0px;
@@ -242,13 +287,14 @@ button {
 }
 
 .mid-input-wrapper {
-  margin-top: 75px;
+  margin-top: 8px;
 }
 
 .mid-input-wrapper label {
-  border-left: solid 2px #FFF;
+  background-color: hsl(0, 0%, 25%);
+  border-radius: 8px;
   display: block;
-  padding-left: 8px;
+  padding: 6px 12px;
 }
 
 .mid-input-wrapper label b {
@@ -263,7 +309,7 @@ button {
   box-sizing: border-box;
   width: 100%;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #FFF;
 }
 
@@ -280,15 +326,17 @@ button {
 }
 
 .videos-section {
-  margin-top: 80px;
+  flex: 1 1;
 }
 
 .videos-section .top {
-  padding: 12px 0px;
+  padding: 12px 12px 12px 24px;
   position: sticky;
-  top: 0;
+  top: 16px;
   background-color: #FFF;
   margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 24px -4px #aaa;
 }
 
 .videos-section .top > span {
@@ -296,10 +344,18 @@ button {
   font-weight: bolder;
 }
 
+.organizer-section {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: solid thin #AAA;
+}
+
 .list {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
+  padding-top: 16px;
+  padding-bottom: 32px;
 }
 
 .list-item img {
@@ -315,12 +371,26 @@ button {
 
 .cancel-btn {
   color: #FFF;
-  display: block;
-  width: 100%;
+  display: table;
+  margin-top: 8px;
+  margin-right: 16px;
+  margin-left: auto;
   box-sizing: border-box;
-  padding: 12px 16px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 2;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: hsl(0 0% 22%);
+}
+
+.cancel-btn svg {
+  fill: #FFF;
+  width: 18px;
+  height: 18px;
 }
 
 .cancel-btn:hover {
@@ -329,7 +399,10 @@ button {
 
 .inner-form {
   position: relative;
-  z-index: 11;
+}
+
+.inner-form-wrapper {
+  margin-right: 16px;
 }
 
 .search-icon {
@@ -340,7 +413,31 @@ button {
   display: none;
 }
 
+.content-wrapper .submit-btn {
+  padding: 18px 12px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16px;
+}
+
 @media all and (max-width: 720px) {
+  .form-wrapper {
+    padding: 16px;
+  }
+  
+  .flex.content-wrapper {
+    display: block;
+  }
+
+  .top-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .inner-form-wrapper {
+    margin-right: auto;
+  }
+  
   .list {
     display: block;
   }
@@ -352,18 +449,19 @@ button {
     align-items: center;
   }
 
+  .mid-input-wrapper {
+    margin-top: 16px;
+  }
+
   .list-item img {
     width: 120px;
     border-radius: 4px;
     margin-right: 16px;
   }
 
-  .input-wrapper {
-    display: block;
-  }
-
-  .input-wrapper .title input[type="text"],
-  .input-wrapper .title,
+  .input-wrapper .label input[type="text"],
+  .input-wrapper .label input[type="number"],
+  .input-wrapper .label,
   .input-wrapper {
     display: block;
     min-width: unset;
@@ -371,10 +469,27 @@ button {
     margin: auto;
     box-sizing: border-box;
   }
+
+  .input-wrapper .label input[type="text"],
+  .input-wrapper .label input[type="number"] {
+    font-size: 1rem;
+  }
+
+  .collection-id {
+    display: flex;
+    margin-bottom: 8px;
+  }
+
+  .input-wrapper:not(.collection-id) .label {
+    margin-bottom: 8px;
+  }
   
   .dropdown-wrapper {
     margin-left: auto;
-    margin-top: 16px;
+  }
+
+  .dropdown-wrapper .selected {
+    padding: 18px 12px;
   }
 
   .videos-section {
@@ -390,7 +505,7 @@ button {
   }
 
   .add-video-btn {
-    padding: 12px 18px;
+    padding: 12px 32px;
   }
 
   .video-box {
@@ -400,10 +515,8 @@ button {
     left: 0;
     right: 0;
     z-index: 99;
-  }
-
-  .inner-form {
-    z-index: 2;
+    min-width: 0px;
+    border-radius: 16px 16px 0px 0px;
   }
 }
 

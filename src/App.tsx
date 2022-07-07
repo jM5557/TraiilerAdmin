@@ -14,7 +14,8 @@ function App() {
         collection={{
           title: "",
           videos: [],
-          categoryId: 0
+          categoryId: 0,
+          slug: ""
         }}
       />
     </div>

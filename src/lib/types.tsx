@@ -9,6 +9,7 @@ export interface Collection {
     title: string,
     id: string,
     videos: Video[],
+    slug: string,
     categoryId: number
 }
 
