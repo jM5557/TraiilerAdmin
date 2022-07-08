@@ -569,7 +569,7 @@ button {
   .list-item {
     display: flex;
     max-width: 100%;
-    margin: auto;
+    margin: auto auto 16px auto;
     align-items: center;
     min-width: unset;
   }
