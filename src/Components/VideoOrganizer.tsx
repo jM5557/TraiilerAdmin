@@ -62,44 +62,44 @@ export const VideoOrganizer = (props: VideoOrganizerProps): JSX.Element => {
                 </div>
             </div>
             <ul>
+                {
+                    videos.map(
+                        (v: Video, index: number) => (
+                            <li className={`video x-start flex y-center ${ (index === selectedPos) ? "selected" : "" }`}
+                                onClick={
+                                    () => {
+                                        // If an item is selected
+                                        if (selectedPos > -1) {
+                                            // If the item clicked is not the selected item 
+                                            // then insert the selected item at this position
+                                            if (selectedPos !== index) {
+                                                setPrevPosA(selectedPos);
+                                                setPrevPosB(index);
 
-            </ul>
-            {
-                videos.map(
-                    (v: Video, index: number) => (
-                        <li className={`video x-start flex y-center ${ (index === selectedPos) ? "selected" : "" }`}
-                            onClick={
-                                () => {
-                                    // If an item is selected
-                                    if (selectedPos > -1) {
-                                        // If the item clicked is not the selected item 
-                                        // then insert the selected item at this position
-                                        if (selectedPos !== index) {
-                                            setPrevPosA(selectedPos);
-                                            setPrevPosB(index);
-
-                                            insertAtPos(selectedPos, index);
+                                                insertAtPos(selectedPos, index);
+                                            }
+                                            else if (selectedPos === index) {
+                                                setSelectedPos(-1);
+                                                setPrevPosA(-1);
+                                            }
+                                        } else {
+                                            // If an item is NOT selected, set it as selected
+                                            setSelectedPos(index);
                                         }
-                                        else if (selectedPos === index) {
-                                            setSelectedPos(-1);
-                                            setPrevPosA(-1);
-                                        }
-                                    } else {
-                                        // If an item is NOT selected, set it as selected
-                                        setSelectedPos(index);
                                     }
                                 }
-                            }
-                        >
-                            <img src={ getThumbnail(v.id, 0) } alt={v.title } />
-                            <div>
-                                <pre>{ index + 1 }</pre>
-                                <div>{ v.title }</div>
-                            </div>
-                        </li>
+                            >
+                                <img src={ getThumbnail(v.id, 0) } alt={v.title } />
+                                <div className="details">
+                                    <pre>{ index + 1 }</pre>
+                                    <h1>{ v.title }</h1>
+                                </div>
+                            </li>
+                        )
                     )
-                )
-            }
+                }
+            </ul>
+            
         </div>
     )
 }

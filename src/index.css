@@ -9,6 +9,10 @@ body {
   background-color: #ffffff;
 }
 
+pre {
+  margin: auto auto;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -339,15 +343,32 @@ button {
   box-shadow: 0px 4px 24px -4px #aaa;
 }
 
+.top h1 {
+  white-space: nowrap;
+}
+
+.top .toolbar-btn:hover {
+  background-color: #aaa;
+}
+
+.top .toolbar-btn {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  margin-right: 6px;
+}
+
+.top .toolbar-btn svg {
+  width: 32px;
+  height: 32px;
+  fill: #1b1b1b;
+}
+
 .videos-section .top > span {
   font-size: small;
   font-weight: bolder;
-}
-
-.organizer-section {
-  margin-top: 32px;
-  padding-top: 32px;
-  border-top: solid thin #AAA;
 }
 
 .list {
@@ -356,6 +377,10 @@ button {
   gap: 16px;
   padding-top: 16px;
   padding-bottom: 32px;
+}
+
+.list-item {
+  min-width: 240px;
 }
 
 .list-item img {
@@ -367,9 +392,26 @@ button {
 .list-item h1 {
   font-size: small;
   margin-top: 0px;
+  margin-bottom: 0px;
 }
 
-.cancel-btn {
+.list-item .delete-btn {
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-item .delete-btn svg {
+  width: 16px;
+}
+
+.list-item .delete-btn:hover {
+  background-color: #aaa;
+}
+
+.video-box .cancel-btn {
   color: #FFF;
   display: table;
   margin-top: 8px;
@@ -421,9 +463,91 @@ button {
   margin-top: 16px;
 }
 
-@media all and (max-width: 720px) {
+.organizer-section {
+  position: fixed;
+  z-index: 9999;
+  left: 50%;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 16px 32px;
+  border-radius: 16px;
+  box-shadow: 0px 0px 32px -8px #1b1b1b;
+  min-width: 640px;
+}
+
+.organizer-section .cancel-btn {
+  background-color: transparent;
+  padding: 12px 16px;
+  display: table;
+  margin-left: auto;
+  margin-right: 0px;
+}
+
+.video-organizer {
+  display: block;
+}
+
+.video-organizer ul {
+  max-height: 64vh;
+  overflow-y: auto;
+  margin: auto;
+  margin-block-start: unset;
+  margin-block-end: unset;
+  padding: 0px;
+}
+
+.video-organizer .video:hover {
+  background-color: #EFEFEF;
+  opacity: 0.75;
+}
+
+.video-organizer .video {
+  padding: 18px 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: solid 3px transparent;
+  box-sizing: border-box;
+}
+
+.video pre {
+  border-left: solid 4px #111;
+  padding-left: 4px;
+}
+
+.video-organizer .video h1 {
+  font-size: small;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.video-organizer .video img {
+  width: 120px;
+  border-radius: 4px;
+  margin-right: 16px;
+  margin-bottom: auto;
+}
+
+.video-organizer .video.selected {
+  border: solid 3px rgb(78, 250, 221);
+}
+
+@media all and (max-width: 1215px) {
+  .list-item {
+    min-width: unset;
+    box-sizing: border-box;
+  }
+
+  .list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media all and (max-width: 900px) {
   .form-wrapper {
     padding: 16px;
+    max-width: 720px;
   }
   
   .flex.content-wrapper {
@@ -447,16 +571,23 @@ button {
     max-width: 100%;
     margin: auto;
     align-items: center;
+    min-width: unset;
   }
 
   .mid-input-wrapper {
     margin-top: 16px;
   }
 
+  .list-item .details {
+    justify-content: space-between;
+    flex: 1 1;
+  }
+
   .list-item img {
     width: 120px;
     border-radius: 4px;
     margin-right: 16px;
+    margin-bottom: auto;
   }
 
   .input-wrapper .label input[type="text"],
@@ -500,15 +631,20 @@ button {
     z-index: unset;
   }
 
+  .top-input-wrapper {
+    margin-top: auto;
+  }
+
   .submit-btn {
     padding: 12px 18px;
+    white-space: nowrap;
   }
 
   .add-video-btn {
     padding: 12px 32px;
   }
 
-  .video-box {
+  .video-box, .organizer-section {
     position: fixed;
     top: 80px;
     bottom: 0px;
@@ -516,34 +652,22 @@ button {
     right: 0;
     z-index: 99;
     min-width: 0px;
+    transform: none;
     border-radius: 16px 16px 0px 0px;
   }
-}
 
-.video-organizerr {
-  position: fixed;
-  top: 20px;
-  bottom: 20px;
-  border-radius: 16px;
-  box-shadow: -4px 4px 12px -4px #111;
-}
+  .organizer-section {
+    padding: 16px 16px;
+    top: 0;
+    border-radius: 0;
+    margin-top: 0;
+  }
 
-.video-organizer {
-  display: block;
-}
+  .top h1 {
+    font-size: 1rem;
+  }
 
-.video-organizer .video {
-  padding: 18px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.video-organizer .video img {
-  width: 160px;
-  border-radius: 8px;
-  margin-right: 16px;
-}
-
-.video-organizer .video.selected {
-  border: solid 3px rgb(78, 250, 221);
+  .video-organizer ul {
+    max-height: 70vh;
+  }
 }

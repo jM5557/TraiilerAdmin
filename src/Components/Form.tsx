@@ -7,6 +7,7 @@ import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
 import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
+import { ReactComponent as SortDownIcon } from "./../assets/icons/sort-down-icon.svg";
 import axios from "axios";
 import { VideoOrganizer } from "./VideoOrganizer";
 
@@ -18,7 +19,7 @@ const Form = (props: FormProps): JSX.Element => {
     const [collection, setCollection] = useState<typeof props.collection>(props.collection);
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [submitType, setSubmitType] = useState<"EDIT" | "CREATE">("CREATE");
-
+    const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
     const [collectionId, setCollectionId] = useState<number | null>(null);
     const loadCollection: Function = async (id: number) => {
         try {
@@ -164,6 +165,32 @@ const Form = (props: FormProps): JSX.Element => {
             </header>
             <div className="flex x-start y-start content-wrapper">    
                 <div className="inner-form-wrapper">
+                { (submitType === "EDIT") &&
+                        <div className="inner-form flex y-center x-start">
+                            <div className="input-wrapper flex x-start y-stretch collection-id">
+                                <label className="label">
+                                    <b>Collection ID</b>
+                                    <input type = "number" 
+                                        value={ "" + collectionId }
+                                        onChange = {
+                                            (e: SyntheticEvent) => {
+                                                setCollectionId(Number((e.target as HTMLInputElement).value))
+                                            }
+                                        }
+                                    />
+                                </label>
+                                <button
+                                    type = "button"
+                                    onClick={
+                                        () => loadCollection(collectionId)
+                                    }
+                                >
+                                    <SearchIcon />
+                                    <span className="hidden">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                    }
                     <div className="inner-form flex y-center x-between">
                         <div className="input-wrapper flex x-start y-end">
                             <label className="label">
@@ -196,32 +223,6 @@ const Form = (props: FormProps): JSX.Element => {
                             </label>
                         </div>
                     </div>
-                    { (submitType === "EDIT") &&
-                        <div className="inner-form flex y-center x-start">
-                            <div className="input-wrapper flex x-start y-stretch collection-id">
-                                <label className="label">
-                                    <b>Collection ID</b>
-                                    <input type = "number" 
-                                        value={ "" + collectionId }
-                                        onChange = {
-                                            (e: SyntheticEvent) => {
-                                                setCollectionId(Number((e.target as HTMLInputElement).value))
-                                            }
-                                        }
-                                    />
-                                </label>
-                                <button
-                                    type = "button"
-                                    onClick={
-                                        () => loadCollection(collectionId)
-                                    }
-                                >
-                                    <SearchIcon />
-                                    <span className="hidden">Search</span>
-                                </button>
-                            </div>
-                        </div>
-                    }
                     { DropDown }
                     { (collection.title.trim().length > 0) &&
                         <button 
@@ -326,6 +327,22 @@ const Form = (props: FormProps): JSX.Element => {
                         <span>{collection.videos.length} Video(s)</span>
                         
                         <div className="flex y-center x-between">
+                            <button 
+                                type="button"
+                                className="toolbar-btn"
+                                onClick={
+                                    () => {
+                                        setDisplayOrganizer(true);
+                                    }
+                                }
+                            >
+                                <SortDownIcon />
+                                <span className="hidden">
+                                    Sort by Viewing Order
+                                </span>  
+                            </button>
+
+
                             <div className="video-box-wrapper" ref = { videoBoxRef }>
                                 <button
                                     type = "button"
@@ -350,15 +367,19 @@ const Form = (props: FormProps): JSX.Element => {
                                 (v: Video, index: number) => (
                                     <div className="list-item" key = { index }>
                                         <img alt = { v.title } src = { `${ getThumbnail(v.id, v.sourceTypeId) }` } />
-                                        <div className="details">
+                                        <div className="details flex x-between y-center">
                                             <h1>{ v.title }</h1>
                                             <button
                                                 type = "button"
+                                                className="delete-btn"
                                                 onClick={
                                                     () => deleteVideo(v.id)
                                                 }
                                             >
-                                                Delete
+                                                <XIcon />
+                                                <div className="hidden">
+                                                    Delete
+                                                </div>
                                             </button>
                                         </div>
                                     </div>
@@ -368,7 +389,7 @@ const Form = (props: FormProps): JSX.Element => {
                     </div>
                 </section>
             </div>
-            { (collection.videos.length > 0) &&
+            { (collection.videos.length > 0 && displayOrganizer) &&
                 <section className="organizer-section">
                     <VideoOrganizer 
                         videos={collection.videos}
@@ -381,6 +402,17 @@ const Form = (props: FormProps): JSX.Element => {
                             }
                         }
                     />
+                    <button
+                        type="button" 
+                        className="cancel-btn"
+                        onClick={
+                            () => {
+                                setDisplayOrganizer(false);
+                            }
+                        }
+                    >
+                        Cancel
+                    </button>
                 </section>
             }
         </div>
