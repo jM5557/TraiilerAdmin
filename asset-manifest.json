@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/TraiilerAdmin/static/css/main.3534c5b7.css",
-    "main.js": "/TraiilerAdmin/static/js/main.fab4cbfe.js",
+    "main.css": "/TraiilerAdmin/static/css/main.29b83d8f.css",
+    "main.js": "/TraiilerAdmin/static/js/main.c48aad38.js",
     "static/js/787.bf0daf95.chunk.js": "/TraiilerAdmin/static/js/787.bf0daf95.chunk.js",
     "static/media/open-sans-all-500-italic.woff": "/TraiilerAdmin/static/media/open-sans-all-500-italic.b865a7a4c029636c1d68.woff",
     "static/media/open-sans-all-700-italic.woff": "/TraiilerAdmin/static/media/open-sans-all-700-italic.18fd52084d5a54b27eaf.woff",
@@ -46,15 +46,16 @@
     "static/media/open-sans-greek-ext-700-normal.woff2": "/TraiilerAdmin/static/media/open-sans-greek-ext-700-normal.62f39cc9ee19d2e0df1e.woff2",
     "static/media/montserrat-vietnamese-600-normal.woff2": "/TraiilerAdmin/static/media/montserrat-vietnamese-600-normal.42f8f1ef5f56b84d7b07.woff2",
     "index.html": "/TraiilerAdmin/index.html",
+    "static/media/sort-down-icon.svg": "/TraiilerAdmin/static/media/sort-down-icon.df996acb0156391e8e8ba59e6efd0b9e.svg",
     "static/media/x-icon.svg": "/TraiilerAdmin/static/media/x-icon.94400823dda8dc08ee85bc5188d065f1.svg",
     "static/media/search-icon.svg": "/TraiilerAdmin/static/media/search-icon.6c5a8240c6ae7b24df0a9785f20bcb08.svg",
     "static/media/caret-down.svg": "/TraiilerAdmin/static/media/caret-down.da95f10ebaf3f17151e17b8c29df9604.svg",
-    "main.3534c5b7.css.map": "/TraiilerAdmin/static/css/main.3534c5b7.css.map",
-    "main.fab4cbfe.js.map": "/TraiilerAdmin/static/js/main.fab4cbfe.js.map",
+    "main.29b83d8f.css.map": "/TraiilerAdmin/static/css/main.29b83d8f.css.map",
+    "main.c48aad38.js.map": "/TraiilerAdmin/static/js/main.c48aad38.js.map",
     "787.bf0daf95.chunk.js.map": "/TraiilerAdmin/static/js/787.bf0daf95.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3534c5b7.css",
-    "static/js/main.fab4cbfe.js"
+    "static/css/main.29b83d8f.css",
+    "static/js/main.c48aad38.js"
   ]
 }
