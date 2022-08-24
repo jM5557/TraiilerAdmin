@@ -339,8 +339,6 @@ button {
   top: 16px;
   background-color: #FFF;
   margin-bottom: 12px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 24px -4px #aaa;
 }
 
 .top h1 {
@@ -531,6 +529,20 @@ button {
 
 .video-organizer .video.selected {
   border: solid 3px rgb(78, 250, 221);
+}
+
+.unstyled-button {
+  background-color: transparent;
+  border: none;
+}
+
+.search-results {
+  display: block;
+}
+
+.search-result {
+  display: block;
+  padding: 8px;
 }
 
 @media all and (max-width: 1215px) {

@@ -1,4 +1,4 @@
-import react, { SyntheticEvent, useState, useRef } from "react";
+import { SyntheticEvent, useState, useRef } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import { Categories } from "../lib/common";
 import { Category, Collection, Video } from "../lib/types";
@@ -10,6 +10,7 @@ import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 import { ReactComponent as SortDownIcon } from "./../assets/icons/sort-down-icon.svg";
 import axios from "axios";
 import { VideoOrganizer } from "./VideoOrganizer";
+import SearchBar from "./SearchBar";
 
 interface FormProps {
     collection: Omit<Collection, "id">
@@ -21,20 +22,16 @@ const Form = (props: FormProps): JSX.Element => {
     const [submitType, setSubmitType] = useState<"EDIT" | "CREATE">("CREATE");
     const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
     const [collectionId, setCollectionId] = useState<number | null>(null);
+    
+    const [collections, setCollections] = useState<Collection[]>([]);
+    
     const loadCollection: Function = async (id: number) => {
         try {
             let results = await axios.get(
-                `https://traiiler.herokuapp.com/edit/collection/${ collectionId }`
+                `https://traiiler.herokuapp.com/edit/collection/${ id }`
             );
 
             let data = await results.data;
-            
-            // TESTING
-            // let data = {
-            //     title: "Foobar",
-            //     videos: [{ id: "fsdlkfml", title: "dd", sourceTypeId: 0, url: "dsldsaa" }],
-            //     categoryId: 2
-            // }
 
             setCollection({
                 title: data.title,
@@ -148,6 +145,7 @@ const Form = (props: FormProps): JSX.Element => {
                 <h1>
                     Collection
                 </h1>
+                <SearchBar setCollections={setCollections}/>
                 <button 
                     className="toggle"
                     onClick={
@@ -163,6 +161,33 @@ const Form = (props: FormProps): JSX.Element => {
                                 : "Create" }
                 </button>
             </header>
+            { (collections.length > 0) &&
+                <div className="search-results">
+                    {
+                        collections.map(
+                            (c: Collection) => (
+                                <button
+                                    className = "search-result"
+                                    type = "button"
+                                    onClick={
+                                        () => {
+                                            loadCollection(Number(c.id));
+                                        }
+                                    }
+                                >
+                                    <b>
+                                        { c.id } | { c.title }
+                                    </b>
+                                </button>
+                            )
+                        )
+                    }
+                    <button
+                        type = "button"
+                        onClick={ () => setCollections([]) }
+                    />
+                </div>
+            }
             <div className="flex x-start y-start content-wrapper">    
                 <div className="inner-form-wrapper">
                 { (submitType === "EDIT") &&
@@ -280,7 +305,7 @@ const Form = (props: FormProps): JSX.Element => {
                                             // http://localhost:5000
                                             // https://traiiler.herokuapp.com
                                             await fetch(
-                                                "https://traiiler.herokuapp.com/edit/collection", 
+                                                "http://localhost:5000/edit/collection", 
                                                 {
                                                     method: "POST",
                                                     headers: {
@@ -311,7 +336,7 @@ const Form = (props: FormProps): JSX.Element => {
                                         }
                                         catch (err: any) {
                                             setSubmitted(false);
-                                            console.log(err);
+                                            console.log((err as Error).message);
                                         }
                                     }
 

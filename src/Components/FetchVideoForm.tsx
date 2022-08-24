@@ -1,4 +1,4 @@
-import react, { useState, useEffect, SyntheticEvent } from "react";
+import { useState, SyntheticEvent } from "react";
 import youtubeAPI from "../api/youtube";
 import { getVideoId, getThumbnail } from "../lib/helpers";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg"; 
@@ -7,7 +7,7 @@ interface FetchVideoFormProps {
     callbackFn: Function
 }
 
-export default ({ callbackFn, ...props }: FetchVideoFormProps): JSX.Element => {
+const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props }): JSX.Element => {
     const [url, setUrl] = useState<string>("");
     const [id, setVideoId] = useState<string | null>(null);
     const [title, setTitle] = useState<string>("");
@@ -73,7 +73,9 @@ export default ({ callbackFn, ...props }: FetchVideoFormProps): JSX.Element => {
                             type = "text"
                             value = { title }
                             onChange = {
-                                (e: SyntheticEvent) => setTitle((e.target as HTMLInputElement).value)
+                                (e: SyntheticEvent) => setTitle(
+                                    (e.target as HTMLInputElement).value
+                                )
                             }
                         />
                     </label>
@@ -82,7 +84,7 @@ export default ({ callbackFn, ...props }: FetchVideoFormProps): JSX.Element => {
                             type = "button"
                             className="submit-btn"
                             onClick={
-                                () => {{
+                                () => {
                                     callbackFn({
                                         id,
                                         url,
@@ -93,8 +95,7 @@ export default ({ callbackFn, ...props }: FetchVideoFormProps): JSX.Element => {
                                     setUrl("");
                                     setVideoId(null);
                                     setTitle("");
-                                }}
-                            
+                                }
                             }
                         >
                             Add
@@ -105,3 +106,5 @@ export default ({ callbackFn, ...props }: FetchVideoFormProps): JSX.Element => {
         </div>
     );
 }
+
+export default FetchVideoForm;
