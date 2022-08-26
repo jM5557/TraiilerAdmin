@@ -1,5 +1,6 @@
 import './App.css';
-import Form from './Components/Form';
+import BaseLayout from './Components/BaseLayout';
+import { CollectionFormProvider } from './util/context/CollectionForm';
 
 export const getThumbnail: Function = (urlId: string, sourceTypeId: number): string => {
   return (sourceTypeId === 0)
@@ -9,16 +10,9 @@ export const getThumbnail: Function = (urlId: string, sourceTypeId: number): str
 
 function App() {
   return (
-    <div>
-      <Form 
-        collection={{
-          title: "",
-          videos: [],
-          categoryId: 0,
-          slug: ""
-        }}
-      />
-    </div>
+      <CollectionFormProvider>
+        <BaseLayout />
+      </CollectionFormProvider>
   );
 }
 

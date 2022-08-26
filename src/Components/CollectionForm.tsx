@@ -1,57 +1,79 @@
-import { SyntheticEvent, useState, useRef } from "react";
-import useOnClickOutside from "../hooks/useOnClickOutside";
-import { Categories } from "../lib/common";
-import { Category, Collection, Video } from "../lib/types";
-import { getThumbnail } from "../lib/helpers";
+import React, { SyntheticEvent, useState, useContext, ReducerAction } from "react";
+import { Categories } from "../util/common";
+import { Category, Collection, Video } from "../util/types";
+import { getThumbnail } from "../util/helpers";
 import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
-import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
 import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 import { ReactComponent as SortDownIcon } from "./../assets/icons/sort-down-icon.svg";
 import axios from "axios";
 import { VideoOrganizer } from "./VideoOrganizer";
-import SearchBar from "./SearchBar";
+import usePopup from "../hooks/UsePopup";
+import { Action, CollectionFormContext } from "../util/context/CollectionForm";
 
 interface FormProps {
-    collection: Omit<Collection, "id">
+    submitType: string
 }
 
-const Form = (props: FormProps): JSX.Element => {
-    const [collection, setCollection] = useState<typeof props.collection>(props.collection);
-    const [submitted, setSubmitted] = useState<boolean>(false);
-    const [submitType, setSubmitType] = useState<"EDIT" | "CREATE">("CREATE");
-    const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
-    const [collectionId, setCollectionId] = useState<number | null>(null);
-    
-    const [collections, setCollections] = useState<Collection[]>([]);
-    
-    const loadCollection: Function = async (id: number) => {
-        try {
-            let results = await axios.get(
-                `https://traiiler.herokuapp.com/edit/collection/${ id }`
-            );
+export const loadCollection: Function = async (id: number, dispatch: React.Dispatch<Action>) => {
+    try {
+        let results = await axios.get(
+            `https://traiiler.herokuapp.com/edit/collection/${ id }`
+            // `http://localhost:5000/edit/collection/${ id }`
+        );
 
-            let data = await results.data;
+        let data = await results.data;
 
-            setCollection({
-                title: data.title,
-                videos: data.videos,
-                slug: data.slug,
-                categoryId: data.categoryId
-            });
-
-            setDcVideos([]);
-        }
-        catch (err: any) {
-            console.log(err);
-        }
+        dispatch({
+            type: 'SET_COLLECTION_ID',
+            payload: id
+        });
+        dispatch({
+            type: 'SET_TITLE',
+            payload: data.title
+        });
+        dispatch({
+            type: 'SET_SLUG',
+            payload: data.slug
+        });
+        dispatch({
+            type: 'SET_CATEGORY_ID',
+            payload: data.categoryId
+        });
+        dispatch({
+            type: 'SET_VIDEOS',
+            payload: data.videos
+        });
+        dispatch({
+            type: 'SET_REMOVED_VIDEOS',
+            payload: []
+        });
     }
+    catch (error) {
+        console.log((error as Error).message);
+    }
+}
 
-    const [dcVideos, setDcVideos] = useState<string[]>([]);
+const CollectionForm = (props: FormProps): JSX.Element => {
+    const { state, dispatch } = useContext(CollectionFormContext);
+    const { 
+        collectionId,
+        title, 
+        slug, 
+        categoryId,
+        videos, 
+        submitted, 
+        removedVideos 
+    } = state;
 
-    const dropDownRef = useRef<HTMLDivElement>(null);
-    const [displayDropDown, setDisplayDropDown] = useState<boolean>(false);
-    useOnClickOutside(dropDownRef, () => setDisplayDropDown(false));
+    const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
+    
+    const [
+        dropDownRef, 
+        displayDropDown, 
+        setDisplayDropDown
+    ] = usePopup<HTMLDivElement>();
+
     const DropDown: JSX.Element = (
         <div className="dropdown-wrapper" ref = { dropDownRef }>
             <button 
@@ -59,7 +81,7 @@ const Form = (props: FormProps): JSX.Element => {
                 className="selected flex x-between y-center"
                 onClick={ () => setDisplayDropDown(!displayDropDown) }
             >
-                <span>{ Categories[collection.categoryId].text }</span>
+                <span>{ Categories[categoryId].text }</span>
                 <CaretDown />
             </button>
             { (displayDropDown) &&
@@ -71,9 +93,9 @@ const Form = (props: FormProps): JSX.Element => {
                                     type ="button"
                                     onClick={
                                         () => {
-                                            setCollection({
-                                                ...collection,
-                                                categoryId: index
+                                            dispatch({
+                                                type: 'SET_CATEGORY_ID',
+                                                payload: index
                                             });
                                             setDisplayDropDown(false);
                                         }
@@ -90,9 +112,12 @@ const Form = (props: FormProps): JSX.Element => {
         </div>
     );
     
-    const videoBoxRef = useRef<HTMLDivElement>(null);
-    const [displayVideoBox, setDisplayVideoBox] = useState<boolean>(false);
-    useOnClickOutside(videoBoxRef, () => setDisplayVideoBox(false))
+    const [
+        videoBoxRef, 
+        displayVideoBox, 
+        setDisplayVideoBox
+    ] = usePopup<HTMLDivElement>();
+
     const VideoBox: JSX.Element = (
         <div className="video-box">
             <button
@@ -114,118 +139,56 @@ const Form = (props: FormProps): JSX.Element => {
     );
 
     const addVideo: Function = (v: Video) => {
-        setCollection({
-            ...collection,
-            ...(collection.title.trim().length > 0 ? {} : { title: v.title }),
-            videos: [
-                ...collection.videos,
+        if (title.trim().length === 0)
+            dispatch({
+                type: 'SET_TITLE',
+                payload: v.title
+            });
+        
+        dispatch({
+            type: 'SET_VIDEOS',
+            payload: [
+                ...videos,
                 v
             ]
-        });
+        })
     }
 
     const deleteVideo: Function = (id: string) => {
-        setCollection({
-            ...collection,
-            videos: (collection.videos.filter(
-                (v: Video) => v.id !== id 
-            ))
-        })
-
-        if (submitType === "EDIT")
-            setDcVideos([
-                ...dcVideos,
-                id
-            ]);
+        if (props.submitType === "EDIT")
+            dispatch({
+                type: 'SET_REMOVED_VIDEOS',
+                payload: [
+                    ...removedVideos,
+                    id
+                ]
+            });
+        
+        dispatch({
+            type: 'SET_VIDEOS',
+            payload: (
+                videos.filter(
+                    (v: Video) => v.id !== id
+                )
+            )
+        });
     }
 
     return (
-        <div className="form-wrapper">
-            <header className="flex y-center x-between top-header">
-                <h1>
-                    Collection
-                </h1>
-                <SearchBar setCollections={setCollections}/>
-                <button 
-                    className="toggle"
-                    onClick={
-                        () => setSubmitType(
-                            (submitType === "CREATE") 
-                                ? "EDIT" 
-                                : "CREATE"
-                        )
-                    }
-                >
-                    { (submitType === "CREATE") 
-                                ? "Edit" 
-                                : "Create" }
-                </button>
-            </header>
-            { (collections.length > 0) &&
-                <div className="search-results">
-                    {
-                        collections.map(
-                            (c: Collection) => (
-                                <button
-                                    className = "search-result"
-                                    type = "button"
-                                    onClick={
-                                        () => {
-                                            loadCollection(Number(c.id));
-                                        }
-                                    }
-                                >
-                                    <b>
-                                        { c.id } | { c.title }
-                                    </b>
-                                </button>
-                            )
-                        )
-                    }
-                    <button
-                        type = "button"
-                        onClick={ () => setCollections([]) }
-                    />
-                </div>
-            }
+        <div>
+            { collectionId }
             <div className="flex x-start y-start content-wrapper">    
                 <div className="inner-form-wrapper">
-                { (submitType === "EDIT") &&
-                        <div className="inner-form flex y-center x-start">
-                            <div className="input-wrapper flex x-start y-stretch collection-id">
-                                <label className="label">
-                                    <b>Collection ID</b>
-                                    <input type = "number" 
-                                        value={ "" + collectionId }
-                                        onChange = {
-                                            (e: SyntheticEvent) => {
-                                                setCollectionId(Number((e.target as HTMLInputElement).value))
-                                            }
-                                        }
-                                    />
-                                </label>
-                                <button
-                                    type = "button"
-                                    onClick={
-                                        () => loadCollection(collectionId)
-                                    }
-                                >
-                                    <SearchIcon />
-                                    <span className="hidden">Search</span>
-                                </button>
-                            </div>
-                        </div>
-                    }
                     <div className="inner-form flex y-center x-between">
                         <div className="input-wrapper flex x-start y-end">
                             <label className="label">
                                 <b>Title</b>
                                 <input type = "text" 
-                                    value={ collection.title }
+                                    value={ title }
                                     onChange = {
-                                        (e: SyntheticEvent) => setCollection({
-                                            ...collection,
-                                            title: (e.target as HTMLInputElement).value
+                                        (e: SyntheticEvent) => dispatch({
+                                            type: 'SET_TITLE',
+                                            payload: (e.target as HTMLInputElement).value
                                         })
                                     }
                                 />
@@ -237,11 +200,11 @@ const Form = (props: FormProps): JSX.Element => {
                             <label className="label">
                                 <b>Slug</b>
                                 <input type = "text" 
-                                    value={ collection.slug }
+                                    value={ slug }
                                     onChange = {
-                                        (e: SyntheticEvent) => setCollection({
-                                            ...collection,
-                                            slug: (e.target as HTMLInputElement).value
+                                        (e: SyntheticEvent) => dispatch({
+                                            type: 'SET_SLUG',
+                                            payload: (e.target as HTMLInputElement).value
                                         })
                                     }
                                 />
@@ -249,7 +212,7 @@ const Form = (props: FormProps): JSX.Element => {
                         </div>
                     </div>
                     { DropDown }
-                    { (collection.title.trim().length > 0) &&
+                    { (title.trim().length > 0) &&
                         <button 
                             type = "button"
                             className={ `submit-btn ${ (submitted) ? "submitted" : ""}` }
@@ -257,12 +220,17 @@ const Form = (props: FormProps): JSX.Element => {
                                 async (e: SyntheticEvent) => {
                                     e.preventDefault();
                                     if (submitted) return;
-                                    setSubmitted(true);
 
-                                    if (submitType === "CREATE") {
+                                    dispatch({
+                                        type: 'SET_SUBMITTED',
+                                        payload: true
+                                    })
+
+                                    if (props.submitType === "CREATE") {
                                         try {
                                             await fetch(
                                                 "https://traiiler.herokuapp.com/add/item", 
+                                                // "http://localhost:5000/add/item", 
                                                 {
                                                     method: "POST",
                                                     headers: {
@@ -270,12 +238,12 @@ const Form = (props: FormProps): JSX.Element => {
                                                     },
                                                     body: JSON.stringify({
                                                         item: { 
-                                                            title: collection.title.trim(), 
-                                                            categoryId: collection.categoryId,
-                                                            slug: collection.slug.trim()
+                                                            title: title.trim(), 
+                                                            categoryId: categoryId,
+                                                            slug: slug.trim()
                                                         },
                                                         videos: (
-                                                            collection.videos.map(
+                                                            videos.map(
                                                                 (v: Video) => ({
                                                                     urlId: v.id,
                                                                     title: v.title,
@@ -287,16 +255,16 @@ const Form = (props: FormProps): JSX.Element => {
                                                     })
                                                 }
                                             );
-                                            setSubmitted(false);
-                                            setCollection({
-                                                title: "",
-                                                categoryId: 0,
-                                                videos: [],
-                                                slug: ""
+                                            dispatch({
+                                                type: 'RESET_STATE',
+                                                payload: null
                                             });
                                         }
                                         catch (err: any) {
-                                            setSubmitted(false);
+                                            dispatch({
+                                                type: 'SET_SUBMITTED',
+                                                payload: false
+                                            })
                                             console.log(err);
                                         }
                                     }
@@ -305,7 +273,8 @@ const Form = (props: FormProps): JSX.Element => {
                                             // http://localhost:5000
                                             // https://traiiler.herokuapp.com
                                             await fetch(
-                                                "http://localhost:5000/edit/collection", 
+                                                "https://traiiler.herokuapp.com/edit/collection",
+                                                // "http://localhost:5000/edit/collection",
                                                 {
                                                     method: "POST",
                                                     headers: {
@@ -314,12 +283,12 @@ const Form = (props: FormProps): JSX.Element => {
                                                     body: JSON.stringify({
                                                         item: {
                                                             id: collectionId,
-                                                            title: collection.title.trim(), 
-                                                            categoryId: collection.categoryId,
-                                                            slug: collection.slug.trim()
+                                                            title: title.trim(), 
+                                                            categoryId: categoryId,
+                                                            slug: slug.trim()
                                                         },
                                                         videos: (
-                                                            collection.videos.map(
+                                                            videos.map(
                                                                 (v: Video) => ({
                                                                     urlId: v.id,
                                                                     title: v.title,
@@ -328,15 +297,21 @@ const Form = (props: FormProps): JSX.Element => {
                                                                 })
                                                             )
                                                         ),
-                                                        disconnectedVideos: dcVideos
+                                                        disconnectedVideos: removedVideos
                                                     })
                                                 }
                                             );
-                                            setSubmitted(false);
+                                            dispatch({
+                                                type: 'SET_SUBMITTED',
+                                                payload: false
+                                            });
                                         }
-                                        catch (err: any) {
-                                            setSubmitted(false);
-                                            console.log((err as Error).message);
+                                        catch (error) {
+                                            dispatch({
+                                                type: 'SET_SUBMITTED',
+                                                payload: false
+                                            })
+                                            console.log((error as Error).message);
                                         }
                                     }
 
@@ -349,7 +324,7 @@ const Form = (props: FormProps): JSX.Element => {
                 </div>
                 <section className="videos-section">
                     <div className="top flex x-between y-center">
-                        <span>{collection.videos.length} Video(s)</span>
+                        <span>{videos.length} Video(s)</span>
                         
                         <div className="flex y-center x-between">
                             <button 
@@ -388,7 +363,7 @@ const Form = (props: FormProps): JSX.Element => {
                     </div>
                     <div className="list">
                         {
-                            collection.videos.map(
+                            videos.map(
                                 (v: Video, index: number) => (
                                     <div className="list-item" key = { index }>
                                         <img alt = { v.title } src = { `${ getThumbnail(v.id, v.sourceTypeId) }` } />
@@ -414,16 +389,16 @@ const Form = (props: FormProps): JSX.Element => {
                     </div>
                 </section>
             </div>
-            { (collection.videos.length > 0 && displayOrganizer) &&
+            { (videos.length > 0 && displayOrganizer) &&
                 <section className="organizer-section">
                     <VideoOrganizer 
-                        videos={collection.videos}
+                        videos={videos}
                         callbackFn = {
                             (videos: Video[]) => {
-                                setCollection({
-                                    ...collection,
-                                    videos
-                                });
+                                dispatch({
+                                    type: 'SET_VIDEOS',
+                                    payload: videos
+                                })
                             }
                         }
                     />
@@ -444,4 +419,4 @@ const Form = (props: FormProps): JSX.Element => {
     )
 }
 
-export default Form;
+export default CollectionForm;

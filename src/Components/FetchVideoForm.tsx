@@ -1,6 +1,6 @@
 import { useState, SyntheticEvent } from "react";
 import youtubeAPI from "../api/youtube";
-import { getVideoId, getThumbnail } from "../lib/helpers";
+import { getVideoId, getThumbnail } from "../util/helpers";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg"; 
 
 interface FetchVideoFormProps {

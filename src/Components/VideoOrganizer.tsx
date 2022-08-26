@@ -1,6 +1,6 @@
 import react, { useState, useEffect } from "react";
 import { getThumbnail } from "../App";
-import { Video } from "./../lib/types";
+import { Video } from "./../util/types";
 
 interface VideoOrganizerProps {
     videos: Video[],
