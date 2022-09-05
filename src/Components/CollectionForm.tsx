@@ -17,13 +17,13 @@ interface FormProps {
 }
 
 export const loadCollection: Function = async (
-    id: number, 
+    id: number,
     dispatch: React.Dispatch<Action>,
     key: string
 ) => {
     try {
         let results = await axios.get(
-            `https://traiiler.herokuapp.com/edit/collection/${ id }?key=${ key }`
+            `${process.env.REACT_APP_BASEURL}/edit/collection/${id}?key=${key}`
         );
 
         let data = await results.data;
@@ -61,41 +61,41 @@ export const loadCollection: Function = async (
 const CollectionForm = (props: FormProps): JSX.Element => {
     const [cookies] = useCookies(['key']);
     const { state, dispatch } = useContext(CollectionFormContext);
-    const { 
+    const {
         collectionId,
-        title, 
-        slug, 
+        title,
+        slug,
         categoryId,
-        videos, 
-        submitted, 
-        removedVideos 
+        videos,
+        submitted,
+        removedVideos
     } = state;
 
     const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
-    
+
     const [
-        dropDownRef, 
-        displayDropDown, 
+        dropDownRef,
+        displayDropDown,
         setDisplayDropDown
     ] = usePopup<HTMLDivElement>();
 
     const DropDown: JSX.Element = (
-        <div className="dropdown-wrapper" ref = { dropDownRef }>
-            <button 
-                type="button" 
+        <div className="dropdown-wrapper" ref={dropDownRef}>
+            <button
+                type="button"
                 className="selected flex x-between y-center"
-                onClick={ () => setDisplayDropDown(!displayDropDown) }
+                onClick={() => setDisplayDropDown(!displayDropDown)}
             >
-                <span>{ Categories[categoryId].text }</span>
+                <span>{Categories[categoryId].text}</span>
                 <CaretDown />
             </button>
-            { (displayDropDown) &&
+            {(displayDropDown) &&
                 <div className="dropdown">
                     {
                         Categories.map(
                             (c: Category, index: number) => (
                                 <button
-                                    type ="button"
+                                    type="button"
                                     onClick={
                                         () => {
                                             dispatch({
@@ -105,9 +105,9 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                             setDisplayDropDown(false);
                                         }
                                     }
-                                    key={ index }
+                                    key={index}
                                 >
-                                    { c.text }
+                                    {c.text}
                                 </button>
                             )
                         )
@@ -116,29 +116,29 @@ const CollectionForm = (props: FormProps): JSX.Element => {
             }
         </div>
     );
-    
+
     const [
-        videoBoxRef, 
-        displayVideoBox, 
+        videoBoxRef,
+        displayVideoBox,
         setDisplayVideoBox
     ] = usePopup<HTMLDivElement>();
 
     const VideoBox: JSX.Element = (
         <div className="video-box">
             <button
-                type = "button"
+                type="button"
                 className="cancel-btn"
                 onClick={
                     () => setDisplayVideoBox(false)
                 }
             >
-                <XIcon />   
-                <span className = "hidden">
+                <XIcon />
+                <span className="hidden">
                     Cancel
                 </span>
             </button>
-            <FetchVideoForm 
-                callbackFn={ (v: Video) => addVideo(v) }
+            <FetchVideoForm
+                callbackFn={(v: Video) => addVideo(v)}
             />
         </div>
     );
@@ -149,7 +149,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 type: 'SET_TITLE',
                 payload: v.title
             });
-        
+
         dispatch({
             type: 'SET_VIDEOS',
             payload: [
@@ -168,7 +168,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     id
                 ]
             });
-        
+
         dispatch({
             type: 'SET_VIDEOS',
             payload: (
@@ -181,16 +181,16 @@ const CollectionForm = (props: FormProps): JSX.Element => {
 
     return (
         <div>
-            { collectionId }
-            <div className="flex x-start y-start content-wrapper">    
+            {collectionId}
+            <div className="flex x-start y-start content-wrapper">
                 <div className="inner-form-wrapper">
                     <div className="inner-form flex y-center x-between">
                         <div className="input-wrapper flex x-start y-end">
                             <label className="label">
                                 <b>Title</b>
-                                <input type = "text" 
-                                    value={ title }
-                                    onChange = {
+                                <input type="text"
+                                    value={title}
+                                    onChange={
                                         (e: SyntheticEvent) => dispatch({
                                             type: 'SET_TITLE',
                                             payload: (e.target as HTMLInputElement).value
@@ -204,9 +204,9 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         <div className="input-wrapper flex x-start y-end">
                             <label className="label">
                                 <b>Slug</b>
-                                <input type = "text" 
-                                    value={ slug }
-                                    onChange = {
+                                <input type="text"
+                                    value={slug}
+                                    onChange={
                                         (e: SyntheticEvent) => dispatch({
                                             type: 'SET_SLUG',
                                             payload: (e.target as HTMLInputElement).value
@@ -216,11 +216,11 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             </label>
                         </div>
                     </div>
-                    { DropDown }
-                    { (title.trim().length > 0) &&
-                        <button 
-                            type = "button"
-                            className={ `submit-btn ${ (submitted) ? "submitted" : ""}` }
+                    {DropDown}
+                    {(title.trim().length > 0) &&
+                        <button
+                            type="button"
+                            className={`submit-btn ${(submitted) ? "disabled" : ""}`}
                             onClick={
                                 async (e: SyntheticEvent) => {
                                     e.preventDefault();
@@ -231,18 +231,19 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                         payload: true
                                     })
 
-                                    if (props.submitType === "CREATE") {
-                                        try {
+
+                                    try {
+                                        if (props.submitType === "CREATE") {
                                             await fetch(
-                                                `https://traiiler.herokuapp.com/add/item?key=${ cookies['key'] }`,
+                                                `${process.env.REACT_APP_BASEURL}/add/item?key=${cookies['key']}`,
                                                 {
                                                     method: "POST",
                                                     headers: {
-                                                    "Content-Type": "application/json"
+                                                        "Content-Type": "application/json"
                                                     },
                                                     body: JSON.stringify({
-                                                        item: { 
-                                                            title: title.trim(), 
+                                                        item: {
+                                                            title: title.trim(),
                                                             categoryId: categoryId,
                                                             slug: slug.trim()
                                                         },
@@ -264,29 +265,20 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                                 payload: null
                                             });
                                         }
-                                        catch (err: any) {
-                                            dispatch({
-                                                type: 'SET_SUBMITTED',
-                                                payload: false
-                                            })
-                                            console.log(err);
-                                        }
-                                    }
-                                    else {
-                                        try {
+                                        else {
                                             // http://localhost:5000
                                             // https://traiiler.herokuapp.com
                                             await fetch(
-                                                `https://traiiler.herokuapp.com/edit/collection?key=${cookies['key']}`,
+                                                `${process.env.REACT_APP_BASEURL}/edit/collection?key=${cookies['key']}`,
                                                 {
                                                     method: "POST",
                                                     headers: {
-                                                    "Content-Type": "application/json"
+                                                        "Content-Type": "application/json"
                                                     },
                                                     body: JSON.stringify({
                                                         item: {
                                                             id: collectionId,
-                                                            title: title.trim(), 
+                                                            title: title.trim(),
                                                             categoryId: categoryId,
                                                             slug: slug.trim()
                                                         },
@@ -304,33 +296,34 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                                     })
                                                 }
                                             );
-                                            dispatch({
-                                                type: 'SET_SUBMITTED',
-                                                payload: false
-                                            });
                                         }
-                                        catch (error) {
-                                            dispatch({
-                                                type: 'SET_SUBMITTED',
-                                                payload: false
-                                            })
-                                            console.log((error as Error).message);
-                                        }
-                                    }
 
+                                        dispatch({
+                                            type: 'SET_SUBMITTED',
+                                            payload: false
+                                        });
+                                    }
+                                    catch (error) {
+                                        dispatch({
+                                            type: 'SET_SUBMITTED',
+                                            payload: false
+                                        })
+                                        console.log((error as Error).message);
+                                    }
                                 }
                             }
+                            disabled={submitted}
                         >
-                            { (submitted) ? "..." : "Submit" }
+                            Submit
                         </button>
                     }
                 </div>
                 <section className="videos-section">
                     <div className="top flex x-between y-center">
                         <span>{videos.length} Video(s)</span>
-                        
+
                         <div className="flex y-center x-between">
-                            <button 
+                            <button
                                 type="button"
                                 className="toolbar-btn"
                                 onClick={
@@ -342,13 +335,13 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                 <SortDownIcon />
                                 <span className="hidden">
                                     Sort by Viewing Order
-                                </span>  
+                                </span>
                             </button>
 
 
-                            <div className="video-box-wrapper" ref = { videoBoxRef }>
+                            <div className="video-box-wrapper" ref={videoBoxRef}>
                                 <button
-                                    type = "button"
+                                    type="button"
                                     className="add-video-btn"
                                     onClick={
                                         () => { setDisplayVideoBox(!displayVideoBox) }
@@ -356,9 +349,9 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                 >
                                     Add Video
                                 </button>
-                                { (displayVideoBox) &&
+                                {(displayVideoBox) &&
                                     <>
-                                        { VideoBox }
+                                        {VideoBox}
                                     </>
                                 }
                             </div>
@@ -368,12 +361,12 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         {
                             videos.map(
                                 (v: Video, index: number) => (
-                                    <div className="list-item" key = { index }>
-                                        <img alt = { v.title } src = { `${ getThumbnail(v.id, v.sourceTypeId) }` } />
+                                    <div className="list-item" key={index}>
+                                        <img alt={v.title} src={`${getThumbnail(v.id, v.sourceTypeId)}`} />
                                         <div className="details flex x-between y-center">
-                                            <h1>{ v.title }</h1>
+                                            <h1>{v.title}</h1>
                                             <button
-                                                type = "button"
+                                                type="button"
                                                 className="delete-btn"
                                                 onClick={
                                                     () => deleteVideo(v.id)
@@ -392,11 +385,11 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     </div>
                 </section>
             </div>
-            { (videos.length > 0 && displayOrganizer) &&
+            {(videos.length > 0 && displayOrganizer) &&
                 <section className="organizer-section">
-                    <VideoOrganizer 
+                    <VideoOrganizer
                         videos={videos}
-                        callbackFn = {
+                        callbackFn={
                             (videos: Video[]) => {
                                 dispatch({
                                     type: 'SET_VIDEOS',
@@ -406,7 +399,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         }
                     />
                     <button
-                        type="button" 
+                        type="button"
                         className="cancel-btn"
                         onClick={
                             () => {

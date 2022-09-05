@@ -16,7 +16,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const handleSearch: Function = async (text: string) => {
         try {
             let results = await axios.get(
-                `https://traiiler.herokuapp.com/search/collection/${ text.trim() }?key=${cookies['key']}`
+                `${process.env.REACT_APP_BASEURL}/search/collection/${ text.trim() }?key=${cookies['key']}`
             );
 
             if (!results) setCollections([]);

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { CollectionFormContext } from "../util/context/CollectionForm";
 import CollectionForm from "./CollectionForm";
 import Search from "./Search";
 
@@ -7,6 +8,8 @@ interface BaseLayoutProps {
 }
  
 const BaseLayout: React.FC<BaseLayoutProps> = ({ children }): JSX.Element => {
+    const { dispatch } = useContext(CollectionFormContext);
+
     const [submitType, setSubmitType] = useState<string>("CREATE");
     
     return (
@@ -16,7 +19,13 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }): JSX.Element => {
                     <button
                         type = "button"
                         onClick={
-                            () => setSubmitType("CREATE")
+                            () => {
+                                setSubmitType("CREATE");
+                                dispatch({
+                                    type: 'RESET_STATE',
+                                    payload: null
+                                });
+                            }
                         }
                         className = { submitType === "CREATE" ? "selected create" : "create" }
                     >

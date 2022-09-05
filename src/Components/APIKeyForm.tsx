@@ -15,7 +15,7 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
         setShowError(false);
         setSubmitting(true);
         try {
-            let results = await fetch(`https://traiiler.herokuapp.com/signin/${ key.trim() }`, {
+            let results = await fetch(`${process.env.REACT_APP_BASEURL}/signin/${ key.trim() }`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
