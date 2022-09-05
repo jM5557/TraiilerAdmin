@@ -10,16 +10,20 @@ import axios from "axios";
 import { VideoOrganizer } from "./VideoOrganizer";
 import usePopup from "../hooks/UsePopup";
 import { Action, CollectionFormContext } from "../util/context/CollectionForm";
+import { useCookies } from "react-cookie";
 
 interface FormProps {
     submitType: string
 }
 
-export const loadCollection: Function = async (id: number, dispatch: React.Dispatch<Action>) => {
+export const loadCollection: Function = async (
+    id: number, 
+    dispatch: React.Dispatch<Action>,
+    key: string
+) => {
     try {
         let results = await axios.get(
-            `https://traiiler.herokuapp.com/edit/collection/${ id }`
-            // `http://localhost:5000/edit/collection/${ id }`
+            `https://traiiler.herokuapp.com/edit/collection/${ id }?key=${ key }`
         );
 
         let data = await results.data;
@@ -55,6 +59,7 @@ export const loadCollection: Function = async (id: number, dispatch: React.Dispa
 }
 
 const CollectionForm = (props: FormProps): JSX.Element => {
+    const [cookies] = useCookies(['key']);
     const { state, dispatch } = useContext(CollectionFormContext);
     const { 
         collectionId,
@@ -229,8 +234,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                     if (props.submitType === "CREATE") {
                                         try {
                                             await fetch(
-                                                "https://traiiler.herokuapp.com/add/item", 
-                                                // "http://localhost:5000/add/item", 
+                                                `https://traiiler.herokuapp.com/add/item?key=${ cookies['key'] }`,
                                                 {
                                                     method: "POST",
                                                     headers: {
@@ -273,8 +277,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                             // http://localhost:5000
                                             // https://traiiler.herokuapp.com
                                             await fetch(
-                                                "https://traiiler.herokuapp.com/edit/collection",
-                                                // "http://localhost:5000/edit/collection",
+                                                `https://traiiler.herokuapp.com/edit/collection?key=${cookies['key']}`,
                                                 {
                                                     method: "POST",
                                                     headers: {

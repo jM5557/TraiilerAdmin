@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { useCookies } from "react-cookie";
 import { ReactComponent as SearchIcon } from "./../../assets/icons/search-icon.svg";
 
 interface SearchBarProps {
@@ -10,12 +11,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setCollections
 }): JSX.Element => {
     const [searchText, setSearchText] = useState<string>("");
+    const [cookies] = useCookies(['key']);
     
     const handleSearch: Function = async (text: string) => {
         try {
             let results = await axios.get(
-                `https://traiiler.herokuapp.com/search/collection/${ text.trim() }`
-                // `http://localhost:5000/search/collection/${ text.trim() }`
+                `https://traiiler.herokuapp.com/search/collection/${ text.trim() }?key=${cookies['key']}`
             );
 
             if (!results) setCollections([]);

@@ -48,11 +48,50 @@ button {
   font-size: 2rem;
 }
 
+.api-key-form {
+  display: table;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.api-key-form .error {
+  margin-top: 16px;
+}
+
 .submit-btn {
   background-color: rgb(43, 233, 43);
   color: rgb(15, 54, 15);
   padding: 12px 48px;
   border-radius: 8px;
+}
+
+.submit-btn.disabled {
+  background-color: gray;
+  color: #222;
+}
+
+.error {
+  padding: 16px;
+  color: red;
+  border: solid thin;
+  border-radius: 4px;
+  background-color: rgb(255, 180, 180);
+  display: table;
+  animation: fadeInDown 0.32s forwards 1 cubic-bezier(0.165, 0.84, 0.44, 1);
+
+}
+
+@keyframes fadeInDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
 }
 
 .flex {
