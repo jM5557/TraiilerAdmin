@@ -1,12 +1,11 @@
 import { SyntheticEvent, useState } from "react";
 import { useCookies } from "react-cookie";
 
-interface APIKeyFormProps {
-    
-}
+interface APIKeyFormProps {}
  
 const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
     const [key, setKey] = useState<string>("");
+    const [errorLog, setErrorLog] = useState<string>("");
     const [showError, setShowError] = useState<boolean>(false);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [cookies, setCookies] = useCookies(['key']);
@@ -30,6 +29,7 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
         }
         catch (error) {
             console.log((error as Error).message);
+            setErrorLog((error as Error).message);
             setShowError(true);
             setSubmitting(false);
         }
@@ -77,7 +77,8 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
                 Submit
             </button>
             { (showError) &&
-                <div className="error">Something went wrong. Please try again.</div>
+                // <div className="error">Something went wrong. Please try again.</div>
+                <div className="error">{ errorLog }</div>
             }
         </form>
     );
