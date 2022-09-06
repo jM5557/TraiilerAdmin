@@ -11,6 +11,7 @@ import { VideoOrganizer } from "./VideoOrganizer";
 import usePopup from "../hooks/UsePopup";
 import { Action, CollectionFormContext } from "../util/context/CollectionForm";
 import { useCookies } from "react-cookie";
+import slugify from "slugify";
 
 interface FormProps {
     submitType: string
@@ -150,6 +151,20 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 payload: v.title
             });
 
+        if (slug.trim().length === 0)
+            dispatch({
+                type: 'SET_SLUG',
+                payload: slugify(
+                    v.title
+                        .replace(/(\||\:|\'|\,|\.)/g , "")
+                        .replace(/\+/g, "plus"),
+                    { 
+                        lower: true, 
+                        trim: true 
+                    }
+                )
+            });
+
         dispatch({
             type: 'SET_VIDEOS',
             payload: [
@@ -177,6 +192,31 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 )
             )
         });
+    }
+
+    const [deleting, setDeleting] = useState<boolean>(false);
+    const deleteCollection: Function = async (id: string) => {
+        setDeleting(true);
+        try {
+            let results = await fetch(`${process.env.REACT_APP_BASEURL}/delete/collection/${id}?key=${cookies['key']}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!results.ok) throw new Error("Unable to delete");
+
+            setDeleting(false);
+            dispatch({
+                type: 'RESET_STATE',
+                payload: null
+            });
+        }
+        catch (error) {
+            console.log((error as Error).message);
+            setDeleting(false);
+        }
     }
 
     return (
@@ -217,106 +257,124 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         </div>
                     </div>
                     {DropDown}
-                    {(title.trim().length > 0) &&
-                        <button
-                            type="button"
-                            className={`submit-btn ${(submitted) ? "disabled" : ""}`}
-                            onClick={
-                                async (e: SyntheticEvent) => {
-                                    e.preventDefault();
-                                    if (submitted) return;
+                    <div className="submit-btns">
+                        { (title.trim().length > 0 && !deleting) &&
+                            <button
+                                type="button"
+                                className={`submit-btn ${(submitted) ? "disabled" : ""}`}
+                                onClick={
+                                    async (e: SyntheticEvent) => {
+                                        e.preventDefault();
+                                        if (submitted) return;
 
-                                    dispatch({
-                                        type: 'SET_SUBMITTED',
-                                        payload: true
-                                    })
+                                        dispatch({
+                                            type: 'SET_SUBMITTED',
+                                            payload: true
+                                        })
 
 
-                                    try {
-                                        if (props.submitType === "CREATE") {
-                                            await fetch(
-                                                `${process.env.REACT_APP_BASEURL}/add/item?key=${cookies['key']}`,
-                                                {
-                                                    method: "POST",
-                                                    headers: {
-                                                        "Content-Type": "application/json"
-                                                    },
-                                                    body: JSON.stringify({
-                                                        item: {
-                                                            title: title.trim(),
-                                                            categoryId: categoryId,
-                                                            slug: slug.trim()
+                                        try {
+                                            if (props.submitType === "CREATE") {
+                                                await fetch(
+                                                    `${process.env.REACT_APP_BASEURL}/add/item?key=${cookies['key']}`,
+                                                    {
+                                                        method: "POST",
+                                                        headers: {
+                                                            "Content-Type": "application/json"
                                                         },
-                                                        videos: (
-                                                            videos.map(
-                                                                (v: Video) => ({
-                                                                    urlId: v.id,
-                                                                    title: v.title,
-                                                                    url: v.url,
-                                                                    sourceTypeId: v.sourceTypeId
-                                                                })
+                                                        body: JSON.stringify({
+                                                            item: {
+                                                                title: title.trim(),
+                                                                categoryId: categoryId,
+                                                                slug: slug.trim()
+                                                            },
+                                                            videos: (
+                                                                videos.map(
+                                                                    (v: Video) => ({
+                                                                        urlId: v.id,
+                                                                        title: v.title,
+                                                                        url: v.url,
+                                                                        sourceTypeId: v.sourceTypeId
+                                                                    })
+                                                                )
                                                             )
-                                                        )
-                                                    })
-                                                }
-                                            );
+                                                        })
+                                                    }
+                                                );
+                                                dispatch({
+                                                    type: 'RESET_STATE',
+                                                    payload: null
+                                                });
+                                            }
+                                            else {
+                                                // http://localhost:5000
+                                                // https://traiiler.herokuapp.com
+                                                await fetch(
+                                                    `${process.env.REACT_APP_BASEURL}/edit/collection?key=${cookies['key']}`,
+                                                    {
+                                                        method: "POST",
+                                                        headers: {
+                                                            "Content-Type": "application/json"
+                                                        },
+                                                        body: JSON.stringify({
+                                                            item: {
+                                                                id: collectionId,
+                                                                title: title.trim(),
+                                                                categoryId: categoryId,
+                                                                slug: slug.trim()
+                                                            },
+                                                            videos: (
+                                                                videos.map(
+                                                                    (v: Video) => ({
+                                                                        urlId: v.id,
+                                                                        title: v.title,
+                                                                        url: v.url,
+                                                                        sourceTypeId: v.sourceTypeId
+                                                                    })
+                                                                )
+                                                            ),
+                                                            disconnectedVideos: removedVideos
+                                                        })
+                                                    }
+                                                );
+                                            }
+
                                             dispatch({
-                                                type: 'RESET_STATE',
-                                                payload: null
+                                                type: 'SET_SUBMITTED',
+                                                payload: false
                                             });
                                         }
-                                        else {
-                                            // http://localhost:5000
-                                            // https://traiiler.herokuapp.com
-                                            await fetch(
-                                                `${process.env.REACT_APP_BASEURL}/edit/collection?key=${cookies['key']}`,
-                                                {
-                                                    method: "POST",
-                                                    headers: {
-                                                        "Content-Type": "application/json"
-                                                    },
-                                                    body: JSON.stringify({
-                                                        item: {
-                                                            id: collectionId,
-                                                            title: title.trim(),
-                                                            categoryId: categoryId,
-                                                            slug: slug.trim()
-                                                        },
-                                                        videos: (
-                                                            videos.map(
-                                                                (v: Video) => ({
-                                                                    urlId: v.id,
-                                                                    title: v.title,
-                                                                    url: v.url,
-                                                                    sourceTypeId: v.sourceTypeId
-                                                                })
-                                                            )
-                                                        ),
-                                                        disconnectedVideos: removedVideos
-                                                    })
-                                                }
-                                            );
+                                        catch (error) {
+                                            dispatch({
+                                                type: 'SET_SUBMITTED',
+                                                payload: false
+                                            })
+                                            console.log((error as Error).message);
                                         }
-
-                                        dispatch({
-                                            type: 'SET_SUBMITTED',
-                                            payload: false
-                                        });
-                                    }
-                                    catch (error) {
-                                        dispatch({
-                                            type: 'SET_SUBMITTED',
-                                            payload: false
-                                        })
-                                        console.log((error as Error).message);
                                     }
                                 }
-                            }
-                            disabled={submitted}
-                        >
-                            Submit
-                        </button>
-                    }
+                                disabled={submitted}
+                            >
+                                Submit
+                            </button>
+                        }
+
+                        {(props.submitType === "EDIT" && state.collectionId && !submitted) &&
+                            <button
+                                type="button"
+                                className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                onClick={
+                                    () => {
+                                        if (!deleting)
+                                            deleteCollection(state.collectionId);
+                                    }
+                                }
+                                disabled={deleting}
+                            >
+                                { (deleting) ? "Deleting" : "Delete" }
+                            </button>
+                        }
+                    </div>
                 </div>
                 <section className="videos-section">
                     <div className="top flex x-between y-center">

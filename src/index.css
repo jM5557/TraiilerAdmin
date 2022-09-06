@@ -67,6 +67,11 @@ button {
   border-radius: 8px;
 }
 
+.submit-btn.cancel {
+  color: #ff473a;
+  background-color: transparent;
+}
+
 .submit-btn.disabled {
   background-color: gray;
   color: #222;
