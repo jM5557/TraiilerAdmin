@@ -379,7 +379,7 @@ button {
 }
 
 .videos-section .top {
-  padding: 12px 12px 12px 24px;
+  padding: 12px 12px 12px 12px;
   position: sticky;
   top: 0px;
   background-color: #FFF;

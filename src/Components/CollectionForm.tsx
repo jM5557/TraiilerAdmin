@@ -193,7 +193,8 @@ const CollectionForm = (props: FormProps): JSX.Element => {
             )
         });
     }
-
+    
+    const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const [deleting, setDeleting] = useState<boolean>(false);
     const deleteCollection: Function = async (id: string) => {
         setDeleting(true);
@@ -258,7 +259,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     </div>
                     {DropDown}
                     <div className="submit-btns">
-                        { (title.trim().length > 0 && !deleting) &&
+                        { (title.trim().length > 0 && slug.trim().length > 0 && !deleting) &&
                             <button
                                 type="button"
                                 className={`submit-btn ${(submitted) ? "disabled" : ""}`}
@@ -360,19 +361,56 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         }
 
                         {(props.submitType === "EDIT" && state.collectionId && !submitted) &&
-                            <button
-                                type="button"
-                                className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
-                                onClick={
-                                    () => {
-                                        if (!deleting)
-                                            deleteCollection(state.collectionId);
-                                    }
+                            <>
+                                { (showConfirmation && !deleting) &&
+                                    <div className="confirmation-buttons flex x-center y-center">
+                                        <button
+                                            type="button"
+                                            className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                            onClick={
+                                                () => {
+                                                    if (!deleting) {
+                                                        setShowConfirmation(false);
+                                                    }
+                                                }
+                                            }
+                                            disabled={deleting}
+                                        >
+                                            No
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                            onClick={
+                                                async () => {
+                                                    if (!deleting) {
+                                                        await deleteCollection(state.collectionId);
+                                                        setShowConfirmation(false);
+                                                    }
+                                                }
+                                            }
+                                            disabled={deleting}
+                                        >
+                                            Yes
+                                        </button>
+                                    </div>
                                 }
-                                disabled={deleting}
-                            >
-                                { (deleting) ? "Deleting" : "Delete" }
-                            </button>
+                                { (!showConfirmation || deleting) &&
+                                    <button
+                                        type="button"
+                                        className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                        onClick={
+                                            () => {
+                                                if (!deleting)
+                                                    setShowConfirmation(true);
+                                            }
+                                        }
+                                        disabled={deleting}
+                                    >
+                                        { (deleting) ? "Deleting" : "Delete" }
+                                    </button>
+                                }
+                            </>
                         }
                     </div>
                 </div>
