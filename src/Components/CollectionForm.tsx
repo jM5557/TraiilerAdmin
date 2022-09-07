@@ -162,6 +162,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 payload: slugify(
                     v.title
                         .replace(/(\||:|'|,|\.)/g , "")
+                        .replace(/(official|teaser|final|trailer)/ig, "")
                         .replace(/\+/g, "plus"),
                     { 
                         lower: true, 
