@@ -148,7 +148,12 @@ const CollectionForm = (props: FormProps): JSX.Element => {
         if (title.trim().length === 0)
             dispatch({
                 type: 'SET_TITLE',
+                // REGEXP to simplify title (ex. Foo Bar | Official Trailer ---> Foo Bar)
                 payload: v.title
+                    .replace(/\+/g, "plus")
+                    .replace(/(official|teaser|final|trailer)/ig, "")
+                    .replace(/\|/g, '')
+                    .replace(/\s\s+/g, ' ')
             });
 
         if (slug.trim().length === 0)
@@ -156,7 +161,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 type: 'SET_SLUG',
                 payload: slugify(
                     v.title
-                        .replace(/(\||\:|\'|\,|\.)/g , "")
+                        .replace(/(\||:|'|,|\.)/g , "")
                         .replace(/\+/g, "plus"),
                     { 
                         lower: true, 
