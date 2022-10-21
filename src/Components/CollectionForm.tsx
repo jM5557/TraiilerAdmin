@@ -1,6 +1,6 @@
-import React, { SyntheticEvent, useState, useContext, ReducerAction } from "react";
+import React, { SyntheticEvent, useState, useContext } from "react";
 import { Categories } from "../util/common";
-import { Category, Collection, Video } from "../util/types";
+import { Category, Video } from "../util/types";
 import { getThumbnail } from "../util/helpers";
 import FetchVideoForm from "./FetchVideoForm";
 import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
@@ -75,50 +75,6 @@ const CollectionForm = (props: FormProps): JSX.Element => {
     const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
 
     const [
-        dropDownRef,
-        displayDropDown,
-        setDisplayDropDown
-    ] = usePopup<HTMLDivElement>();
-
-    const DropDown: JSX.Element = (
-        <div className="dropdown-wrapper" ref={dropDownRef}>
-            <button
-                type="button"
-                className="selected flex x-between y-center"
-                onClick={() => setDisplayDropDown(!displayDropDown)}
-            >
-                <span>{Categories[categoryId].text}</span>
-                <CaretDown />
-            </button>
-            {(displayDropDown) &&
-                <div className="dropdown">
-                    {
-                        Categories.map(
-                            (c: Category, index: number) => (
-                                <button
-                                    type="button"
-                                    onClick={
-                                        () => {
-                                            dispatch({
-                                                type: 'SET_CATEGORY_ID',
-                                                payload: index
-                                            });
-                                            setDisplayDropDown(false);
-                                        }
-                                    }
-                                    key={index}
-                                >
-                                    {c.text}
-                                </button>
-                            )
-                        )
-                    }
-                </div>
-            }
-        </div>
-    );
-
-    const [
         videoBoxRef,
         displayVideoBox,
         setDisplayVideoBox
@@ -139,7 +95,9 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 </span>
             </button>
             <FetchVideoForm
-                callbackFn={(v: Video) => addVideo(v)}
+                callbackFn={(v: Video) => {
+                    addVideo(v);
+                }}
             />
         </div>
     );
@@ -150,8 +108,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 type: 'SET_TITLE',
                 // REGEXP to simplify title (ex. Foo Bar | Official Trailer ---> Foo Bar)
                 payload: v.title
-                    .replace(/\+/g, "plus")
-                    .replace(/(official|teaser|final|trailer)/ig, "")
+                    .replace(/(official teaser trailer|teaser trailer|final trailer|trailer|official|announcement trailer|launch trailer|world premiere)/ig, "")
                     .replace(/\|/g, '')
                     .replace(/\s\s+/g, ' ')
             });
@@ -161,12 +118,12 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 type: 'SET_SLUG',
                 payload: slugify(
                     v.title
-                        .replace(/(\||:|'|,|\.)/g , "")
-                        .replace(/(official|teaser|final|trailer)/ig, "")
+                        .replace(/(\||:|'|,|\.)/g, "")
+                        .replace(/(official teaser trailer|teaser trailer|final trailer|trailer|official|announcement trailer|launch trailer|world premiere)/ig, "")
                         .replace(/\+/g, "plus"),
-                    { 
-                        lower: true, 
-                        trim: true 
+                    {
+                        lower: true,
+                        trim: true
                     }
                 )
             });
@@ -199,7 +156,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
             )
         });
     }
-    
+
     const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
     const [deleting, setDeleting] = useState<boolean>(false);
     const deleteCollection: Function = async (id: string) => {
@@ -225,10 +182,21 @@ const CollectionForm = (props: FormProps): JSX.Element => {
             setDeleting(false);
         }
     }
-
+    if (props.submitType === "EDIT" && !collectionId) {
+        return (
+            <div className="empty">
+                <header>Edit a Collection</header>
+                <p>Use the search bar to find a collection to edit!</p>
+            </div>
+        )
+    }
     return (
         <div>
-            {collectionId}
+            { (collectionId) &&
+                <small className="id">
+                    {collectionId}
+                </small>
+            }
             <div className="flex x-start y-start content-wrapper">
                 <div className="inner-form-wrapper">
                     <div className="inner-form flex y-center x-between">
@@ -249,7 +217,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     </div>
                     <div className="inner-form flex y-center x-start">
                         <div className="input-wrapper flex x-start y-end">
-                            <label className="label">
+                            <label className={`label ${ props.submitType === "EDIT" ? "disabled" : "" }`}>
                                 <b>Slug</b>
                                 <input type="text"
                                     value={slug}
@@ -259,13 +227,34 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                             payload: (e.target as HTMLInputElement).value
                                         })
                                     }
+                                    disabled={props.submitType === "EDIT"}
                                 />
                             </label>
                         </div>
                     </div>
-                    {DropDown}
+                    {/* {DropDown} */}
+                    <div className="categories flex x-between">
+                        { Categories.map(
+                            (c: Category, index: number) => (
+                                <button
+                                    type = "button" 
+                                    className={`flex y-center x-center ${ index === state.categoryId ? "selected" : "" }`}
+                                    onClick = {
+                                        () => {
+                                            dispatch({
+                                                type: 'SET_CATEGORY_ID',
+                                                payload: index
+                                            });
+                                        }
+                                    }
+                                >
+                                    { c.text }
+                                </button>
+                            )
+                        )}
+                    </div>
                     <div className="submit-btns">
-                        { (title.trim().length > 0 && slug.trim().length > 0 && !deleting) &&
+                        {(title.trim().length > 0 && slug.trim().length > 0 && !deleting) &&
                             <button
                                 type="button"
                                 className={`submit-btn ${(submitted) ? "disabled" : ""}`}
@@ -277,8 +266,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                         dispatch({
                                             type: 'SET_SUBMITTED',
                                             payload: true
-                                        })
-
+                                        });
 
                                         try {
                                             if (props.submitType === "CREATE") {
@@ -368,7 +356,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
 
                         {(props.submitType === "EDIT" && state.collectionId && !submitted) &&
                             <>
-                                { (showConfirmation && !deleting) &&
+                                {(showConfirmation && !deleting) &&
                                     <div className="confirmation-buttons flex x-center y-center">
                                         <button
                                             type="button"
@@ -401,7 +389,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                         </button>
                                     </div>
                                 }
-                                { (!showConfirmation || deleting) &&
+                                {(!showConfirmation || deleting) &&
                                     <button
                                         type="button"
                                         className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
@@ -413,7 +401,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                         }
                                         disabled={deleting}
                                     >
-                                        { (deleting) ? "Deleting" : "Delete" }
+                                        {(deleting) ? "Deleting" : "Delete"}
                                     </button>
                                 }
                             </>
@@ -425,21 +413,22 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         <span>{videos.length} Video(s)</span>
 
                         <div className="flex y-center x-between">
-                            <button
-                                type="button"
-                                className="toolbar-btn"
-                                onClick={
-                                    () => {
-                                        setDisplayOrganizer(true);
+                            { (videos.length > 1) &&
+                                <button
+                                    type="button"
+                                    className="toolbar-btn"
+                                    onClick={
+                                        () => {
+                                            setDisplayOrganizer(true);
+                                        }
                                     }
-                                }
-                            >
-                                <SortDownIcon />
-                                <span className="hidden">
-                                    Sort by Viewing Order
-                                </span>
-                            </button>
-
+                                >
+                                    <SortDownIcon />
+                                    <span className="hidden">
+                                        Sort by Viewing Order
+                                    </span>
+                                </button>
+                            }
 
                             <div className="video-box-wrapper" ref={videoBoxRef}>
                                 <button
@@ -496,21 +485,24 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                 dispatch({
                                     type: 'SET_VIDEOS',
                                     payload: videos
-                                })
-                            }
-                        }
-                    />
-                    <button
-                        type="button"
-                        className="cancel-btn"
-                        onClick={
-                            () => {
+                                });
                                 setDisplayOrganizer(false);
                             }
                         }
-                    >
-                        Cancel
-                    </button>
+                        CancelBtn = {
+                            (<button
+                                type="button"
+                                className="cancel-btn"
+                                onClick={
+                                    () => {
+                                        setDisplayOrganizer(false);
+                                    }
+                                }
+                            >
+                                Cancel
+                            </button>)
+                        }
+                    />
                 </section>
             }
         </div>

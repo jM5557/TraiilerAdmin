@@ -1,8 +1,10 @@
 import { SyntheticEvent, useState } from "react";
 import { useCookies } from "react-cookie";
+import { ReactComponent as Logo } from "./../assets/logos/logo-v2-128px.svg";
+import { ReactComponent as ChevronRight } from "./../assets/icons/chevron-right.svg";
 
-interface APIKeyFormProps {}
- 
+interface APIKeyFormProps { }
+
 const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
     const [key, setKey] = useState<string>("");
     const [errorLog, setErrorLog] = useState<string>("");
@@ -14,7 +16,7 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
         setShowError(false);
         setSubmitting(true);
         try {
-            let results = await fetch(`${process.env.REACT_APP_BASEURL}/signin/${ key.trim() }`, {
+            let results = await fetch(`${process.env.REACT_APP_BASEURL}/signin/${key.trim()}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -22,7 +24,7 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
             });
 
             if (!results.ok) throw new Error("Invalid API Key");
-            
+
             setCookies('key', key.trim());
             setSubmitting(false);
             console.log(key.trim());
@@ -35,53 +37,54 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
         }
     }
     return (
-        <form 
+        <form
             className="api-key-form"
             onSubmit={
-                (submitting) 
-                    ? () => {} 
+                (submitting)
+                    ? () => { }
                     : handleSubmit
             }
         >
             <div className="inner-form flex y-center x-between">
-                <div className="input-wrapper flex x-start y-end">
+                <Logo className="logo" />
+                <div className="input-wrapper flex">
                     <label className="label">
                         <b>API Key</b>
-                        <input type = "text" 
-                            value={ key }
-                            onChange = {
+                        <input type="text"
+                            value={key}
+                            onChange={
                                 (e: SyntheticEvent) => setKey((e.target as HTMLInputElement).value)
                             }
                         />
                     </label>
+                    <button
+                        type="submit"
+                        onClick={
+                            (e: SyntheticEvent) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                if (!submitting)
+                                    handleSubmit();
+                            }
+                        }
+                        className={
+                            (submitting)
+                                ? 'submit-btn disabled'
+                                : 'submit-btn'
+                        }
+                        disabled={submitting}
+                    >
+                        <ChevronRight />
+                    </button>
                 </div>
             </div>
-            <button
-                type = "submit"
-                onClick={
-                    (e: SyntheticEvent) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        if (!submitting)
-                            handleSubmit();
-                    }
-                }
-                className={
-                    (submitting) 
-                        ? 'submit-btn disabled' 
-                        : 'submit-btn'
-                }
-                disabled={submitting}
-            >
-                Submit
-            </button>
-            { (showError) &&
+            {(showError) &&
                 // <div className="error">Something went wrong. Please try again.</div>
-                <div className="error">{ errorLog }</div>
+                <div className="error">{errorLog}</div>
             }
         </form>
     );
 }
- 
+
 export default APIKeyForm;

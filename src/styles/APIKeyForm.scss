@@ -1,0 +1,77 @@
+@import './variables.scss';
+
+.api-key-form {
+    display: table;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .logo {
+        display: table;
+        margin: auto 32px auto auto;
+    }
+
+    .error {
+        margin-top: 16px;
+        display: block;
+        text-align: center;
+        position: absolute;
+        margin: auto;
+        left: 0;
+        right: 0;
+    }
+
+    .input-wrapper {
+        background-color: #{ $secondary };
+        border-radius: 16px;
+        box-sizing: border-box;
+        width: 90vw;
+
+        &.flex {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+    }
+
+    .submit-btn {
+        margin: 8px 8px 8px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        border-radius: 50%;
+        min-width: unset;
+        padding: 8px;
+        background-color: transparent;
+
+        &:hover {
+            background-color: #{ $primary };
+        }
+        
+        svg {
+            width: 24px;
+            height: 24px;
+            fill: #{ white };
+        }
+    }
+
+    @media all and (max-width: 720px) {
+        .x-between {
+            display: block;
+        }
+
+        .logo {
+            margin: auto auto 32px;
+        }
+
+        .input-wrapper label {
+            input[type="text"] {
+                min-width: unset;
+            }
+        }
+    }
+}
+  

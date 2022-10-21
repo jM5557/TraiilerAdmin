@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { useCookies } from "react-cookie";
 import { ReactComponent as SearchIcon } from "./../../assets/icons/search-icon.svg";
+import { ReactComponent as XIcon } from "./../../assets/icons/x-icon.svg";
 
 interface SearchBarProps {
     setCollections: Function
@@ -30,7 +31,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
         }
     }
     return (
-        <div className="inner-form flex y-center x-start">
+        <form 
+            className="inner-form flex y-center x-start"
+            onSubmit={
+                (e: SyntheticEvent) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    handleSearch(searchText);
+                }
+            }
+        >
             <div className="input-wrapper flex x-start y-stretch search-bar">
                 <label className="label">
                     <b>Search</b>
@@ -38,13 +49,33 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         type = "text"
                         onChange={
                             (e) => {
-                            setSearchText(e.target.value);  
+                                setSearchText(e.target.value);  
                             }
                         }
                         value = { searchText }
                         className="search-bar-input"
+                        autoFocus
                     />
                 </label>
+                { (searchText.length > 0) &&
+                    <button
+                        type = "button"
+                        className="clear-text-btn"
+                        onClick = { 
+                            (e: SyntheticEvent) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                setSearchText("");
+                            }
+                        }
+                    >
+                        <XIcon />
+                        <span className="hidden">
+                            Clear
+                        </span>
+                    </button>
+                }
                 <button
                     type = "button"
                     onClick={
@@ -55,7 +86,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     <span className="hidden">Search</span>
                 </button>
             </div>
-        </div>
+        </form>
     );
 }
  

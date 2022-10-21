@@ -1,5 +1,5 @@
 import { CookiesProvider, useCookies } from 'react-cookie';
-import './App.css';
+import './styles/index.scss';
 import APIKeyForm from './Components/APIKeyForm';
 import BaseLayout from './Components/BaseLayout';
 import { CollectionFormProvider } from './util/context/CollectionForm';
