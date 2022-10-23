@@ -3,19 +3,24 @@ import { Categories } from "../util/common";
 import { Category, Video } from "../util/types";
 import { getThumbnail } from "../util/helpers";
 import FetchVideoForm from "./FetchVideoForm";
-import { ReactComponent as CaretDown } from "./../assets/icons/caret-down.svg";
+import { ReactComponent as GamesIcon } from "./../assets/icons/games-icon.svg";
+import { ReactComponent as MoviesIcon } from "./../assets/icons/movies-icon.svg";
+import { ReactComponent as TVShowsIcon } from "./../assets/icons/tv-shows-icon.svg";
+import { ReactComponent as PlayIcon } from "./../assets/icons/play-icon.svg";
 import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 import { ReactComponent as SortDownIcon } from "./../assets/icons/sort-down-icon.svg";
-import axios from "axios";
 import { VideoOrganizer } from "./VideoOrganizer";
 import usePopup from "../hooks/UsePopup";
 import { Action, CollectionFormContext } from "../util/context/CollectionForm";
 import { useCookies } from "react-cookie";
 import slugify from "slugify";
+import axios from "axios";
 
 interface FormProps {
     submitType: string
 }
+
+const CategoryIcons: JSX.Element[] = [<GamesIcon />, <MoviesIcon />, <TVShowsIcon />];
 
 export const loadCollection: Function = async (
     id: number,
@@ -81,7 +86,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
     ] = usePopup<HTMLDivElement>();
 
     const VideoBox: JSX.Element = (
-        <div className="video-box">
+        <div className="video-box" ref={videoBoxRef}>
             <button
                 type="button"
                 className="cancel-btn"
@@ -192,10 +197,64 @@ const CollectionForm = (props: FormProps): JSX.Element => {
     }
     return (
         <div>
-            { (collectionId) &&
-                <small className="id">
-                    {collectionId}
-                </small>
+            {(collectionId) &&
+                <div className="top-bar flex y-center x-between">
+                    <small className="id">
+                        {collectionId}
+                    </small>
+                    {(!submitted) &&
+                            <>
+                                {(showConfirmation && !deleting) &&
+                                    <div className="confirmation-buttons flex x-center y-center">
+                                        <button
+                                            type="button"
+                                            className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                            onClick={
+                                                () => {
+                                                    if (!deleting) {
+                                                        setShowConfirmation(false);
+                                                    }
+                                                }
+                                            }
+                                            disabled={deleting}
+                                        >
+                                            No
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                            onClick={
+                                                async () => {
+                                                    if (!deleting) {
+                                                        await deleteCollection(state.collectionId);
+                                                        setShowConfirmation(false);
+                                                    }
+                                                }
+                                            }
+                                            disabled={deleting}
+                                        >
+                                            Yes
+                                        </button>
+                                    </div>
+                                }
+                                {(!showConfirmation || deleting) &&
+                                    <button
+                                        type="button"
+                                        className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
+                                        onClick={
+                                            () => {
+                                                if (!deleting)
+                                                    setShowConfirmation(true);
+                                            }
+                                        }
+                                        disabled={deleting}
+                                    >
+                                        {(deleting) ? "Deleting" : "Delete"}
+                                    </button>
+                                }
+                            </>
+                        }
+                </div>
             }
             <div className="flex x-start y-start content-wrapper">
                 <div className="inner-form-wrapper">
@@ -217,7 +276,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     </div>
                     <div className="inner-form flex y-center x-start">
                         <div className="input-wrapper flex x-start y-end">
-                            <label className={`label ${ props.submitType === "EDIT" ? "disabled" : "" }`}>
+                            <label className={`label ${props.submitType === "EDIT" ? "disabled" : ""}`}>
                                 <b>Slug</b>
                                 <input type="text"
                                     value={slug}
@@ -232,14 +291,14 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             </label>
                         </div>
                     </div>
-                    {/* {DropDown} */}
+
                     <div className="categories flex x-between">
-                        { Categories.map(
+                        {Categories.map(
                             (c: Category, index: number) => (
                                 <button
-                                    type = "button" 
-                                    className={`flex y-center x-center ${ index === state.categoryId ? "selected" : "" }`}
-                                    onClick = {
+                                    type="button"
+                                    className={`${index === state.categoryId ? "selected" : ""}`}
+                                    onClick={
                                         () => {
                                             dispatch({
                                                 type: 'SET_CATEGORY_ID',
@@ -248,11 +307,13 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                         }
                                     }
                                 >
-                                    { c.text }
+                                    {CategoryIcons[index]}
+                                    <span>{c.text}</span>
                                 </button>
                             )
                         )}
                     </div>
+
                     <div className="submit-btns">
                         {(title.trim().length > 0 && slug.trim().length > 0 && !deleting) &&
                             <button
@@ -353,67 +414,27 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                 Submit
                             </button>
                         }
-
-                        {(props.submitType === "EDIT" && state.collectionId && !submitted) &&
-                            <>
-                                {(showConfirmation && !deleting) &&
-                                    <div className="confirmation-buttons flex x-center y-center">
-                                        <button
-                                            type="button"
-                                            className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
-                                            onClick={
-                                                () => {
-                                                    if (!deleting) {
-                                                        setShowConfirmation(false);
-                                                    }
-                                                }
-                                            }
-                                            disabled={deleting}
-                                        >
-                                            No
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
-                                            onClick={
-                                                async () => {
-                                                    if (!deleting) {
-                                                        await deleteCollection(state.collectionId);
-                                                        setShowConfirmation(false);
-                                                    }
-                                                }
-                                            }
-                                            disabled={deleting}
-                                        >
-                                            Yes
-                                        </button>
-                                    </div>
-                                }
-                                {(!showConfirmation || deleting) &&
-                                    <button
-                                        type="button"
-                                        className={`submit-btn cancel ${(deleting) ? 'disabled' : ''}`}
-                                        onClick={
-                                            () => {
-                                                if (!deleting)
-                                                    setShowConfirmation(true);
-                                            }
-                                        }
-                                        disabled={deleting}
-                                    >
-                                        {(deleting) ? "Deleting" : "Delete"}
-                                    </button>
-                                }
-                            </>
-                        }
                     </div>
                 </div>
                 <section className="videos-section">
-                    <div className="top flex x-between y-center">
-                        <span>{videos.length} Video(s)</span>
+                    <div className="top flex x-between y-center" ref={videoBoxRef}>
+                        <button
+                                type="button"
+                                className="add-video-btn flex y-center x-center"
+                                onClick={
+                                    (e: SyntheticEvent) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setDisplayVideoBox(!displayVideoBox)
+                                    }
+                                }
+                            >
+                                <PlayIcon />
+                                <span>Add Video <b>{ videos.length}</b></span>
+                            </button>
 
                         <div className="flex y-center x-between">
-                            { (videos.length > 1) &&
+                            {(videos.length > 1) &&
                                 <button
                                     type="button"
                                     className="toolbar-btn"
@@ -429,25 +450,13 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                     </span>
                                 </button>
                             }
-
-                            <div className="video-box-wrapper" ref={videoBoxRef}>
-                                <button
-                                    type="button"
-                                    className="add-video-btn"
-                                    onClick={
-                                        () => { setDisplayVideoBox(!displayVideoBox) }
-                                    }
-                                >
-                                    Add Video
-                                </button>
-                                {(displayVideoBox) &&
-                                    <>
-                                        {VideoBox}
-                                    </>
-                                }
-                            </div>
                         </div>
                     </div>
+                    {(displayVideoBox) &&
+                        <>
+                            {VideoBox}
+                        </>
+                    }
                     <div className="list">
                         {
                             videos.map(
@@ -489,7 +498,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                 setDisplayOrganizer(false);
                             }
                         }
-                        CancelBtn = {
+                        CancelBtn={
                             (<button
                                 type="button"
                                 className="cancel-btn"
