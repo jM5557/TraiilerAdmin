@@ -363,8 +363,6 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                                 });
                                             }
                                             else {
-                                                // http://localhost:5000
-                                                // https://traiiler.herokuapp.com
                                                 await fetch(
                                                     `${process.env.REACT_APP_BASEURL}/edit/collection?key=${cookies['key']}`,
                                                     {
