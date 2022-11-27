@@ -43,7 +43,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "https://traiiler-admin-backend-production.up.railway.app/",
+  "proxy": "https://traiiler-admin-backend-production.up.railway.app",
   "browserslist": {
     "production": [
       ">0.2%",
