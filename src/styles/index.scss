@@ -48,7 +48,7 @@ body {
   
   .form-wrapper {
     padding: 32px;
-    max-width: 1440px;
+    max-width: 1920px;
     margin: auto;
   }
   
@@ -71,6 +71,20 @@ body {
   .api-key-form .error {
     margin-top: 16px;
   }
+
+  .confirmation-buttons {
+    .cancel {
+      padding: 8px;
+    }
+
+    .cancel:nth-of-type(2) {
+      margin-left: 8px;
+    }
+
+    .cancel:nth-of-type(1) {
+      border: none;
+    }
+  }
   
   .submit-btn {
     background-color: rgb(143, 228, 143);
@@ -83,7 +97,7 @@ body {
   .submit-btn.cancel {
     color: #ff473a;
     background-color: transparent;
-    padding: 12px 6px;
+    border: solid 2px #e9153d;
 
     &:hover {
       opacity: 0.50;
@@ -187,9 +201,10 @@ body {
   }
   
   .input-wrapper {
-    margin-bottom: 16px;
+    width: 100%;
     
     .label {
+      width: 100%;
       background-color: $secondary;
       color: #e7e7e7;
       border-radius: 12px;
@@ -393,6 +408,7 @@ body {
       position: sticky;
       top: 0px;
       background-color: $bgColor;
+      margin-top: -12px;
 
       h1 {
         white-space: nowrap;
@@ -414,6 +430,11 @@ body {
           width: 32px;
           height: 32px;
           fill: $white;
+        }
+
+        span {
+          margin-left: 12px;
+          margin-right: 12px;
         }
       }
     }

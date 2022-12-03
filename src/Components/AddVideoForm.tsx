@@ -2,7 +2,6 @@ import { useState, SyntheticEvent, useRef, RefObject } from "react";
 import youtubeAPI from "../api/youtube";
 import { getVideoId, getThumbnail } from "../util/helpers";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
-import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 
 interface AddVideoFormProps {
     callbackFn: Function

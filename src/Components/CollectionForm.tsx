@@ -6,7 +6,6 @@ import AddVideoForm from "./AddVideoForm";
 import { ReactComponent as GamesIcon } from "./../assets/icons/games-icon.svg";
 import { ReactComponent as MoviesIcon } from "./../assets/icons/movies-icon.svg";
 import { ReactComponent as TVShowsIcon } from "./../assets/icons/tv-shows-icon.svg";
-import { ReactComponent as PlayIcon } from "./../assets/icons/play-icon.svg";
 import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 import { ReactComponent as SortDownIcon } from "./../assets/icons/sort-down-icon.svg";
 import { VideoOrganizer } from "./VideoOrganizer";
@@ -244,7 +243,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
             }
             <div className="flex x-start y-start content-wrapper">
                 <div className="inner-form-wrapper">
-                    <div className="inner-form flex y-center x-between">
+                    <div className="inner-form">
                         <div className="input-wrapper flex x-start y-end">
                             <label className="label">
                                 <b>Title</b>
@@ -260,7 +259,8 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             </label>
                         </div>
                     </div>
-                    <div className="inner-form flex y-center x-start">
+                    <br/>
+                    <div className="inner-form">
                         <div className="input-wrapper flex x-start y-end">
                             <label className={`label ${props.submitType === "EDIT" ? "disabled" : ""}`}>
                                 <b>Slug</b>
@@ -277,7 +277,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             </label>
                         </div>
                     </div>
-
+                    <br />
                     <div className="categories flex x-between">
                         {Categories.map(
                             (c: Category, index: number) => (
@@ -299,6 +299,10 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             )
                         )}
                     </div>
+
+                    <br />
+
+                    { VideoBox }
 
                     <div className="submit-btns">
                         {(title.trim().length > 0 && slug.trim().length > 0 && !deleting) &&
@@ -401,28 +405,24 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     </div>
                 </div>
                 <section className="videos-section">
-                    { VideoBox }
-                    
-                    <div className="top flex x-between y-center" ref={videoBoxRef}>
-                        <div className="flex y-center x-between">
-                            {(videos.length > 1) &&
-                                <button
-                                    type="button"
-                                    className="toolbar-btn"
-                                    onClick={
-                                        () => {
-                                            setDisplayOrganizer(true);
+                    {(videos.length > 1) &&
+                        <div className="top flex x-end y-center" ref={videoBoxRef}>
+                            <div className="flex y-center x-between">
+                                    <button
+                                        type="button"
+                                        className="toolbar-btn"
+                                        onClick={
+                                            () => setDisplayOrganizer(true)
                                         }
-                                    }
-                                >
-                                    <SortDownIcon />
-                                    <span className="hidden">
-                                        Sort by Viewing Order
-                                    </span>
-                                </button>
-                            }
+                                    >
+                                        <SortDownIcon />
+                                        <span>
+                                            Organize
+                                        </span>
+                                    </button>
+                            </div>
                         </div>
-                    </div>
+                    }
                     
                     <div className="list">
                         {
