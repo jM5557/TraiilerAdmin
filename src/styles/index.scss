@@ -1,4 +1,5 @@
 @use './APIKeyForm.scss';
+@use './AddVideoForm.scss';
 
 @import './variables.scss';
 
@@ -15,7 +16,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   
-    background-color: #{ $bgColor };
+    background-color: $bgColor;
     color: #FFF;
   }
   
@@ -42,12 +43,12 @@ body {
     cursor: pointer;
     background-color: transparent;
     font-weight: bolder;
-    color: #{ $white };
+    color: $white;
   }
   
   .form-wrapper {
     padding: 32px;
-    max-width: 1280px;
+    max-width: 1440px;
     margin: auto;
   }
   
@@ -72,10 +73,10 @@ body {
   }
   
   .submit-btn {
-    background-color: rgb(92, 255, 119);
-    color: rgb(15, 54, 15);
+    background-color: rgb(143, 228, 143);
+    color: rgb(21, 53, 21);
+    border-radius: 6px;
     padding: 12px 48px;
-    border-radius: 8px;
     animation: fadeIn 0.48s forwards 1 cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
@@ -181,7 +182,7 @@ body {
     font-weight: bolder;
     padding: 4px 8px;
     border-radius: 8px;
-    background-color: #{ $secondary };
+    background-color: $secondary;
     margin-bottom: 8px;
   }
   
@@ -189,7 +190,7 @@ body {
     margin-bottom: 16px;
     
     .label {
-      background-color: #{ $secondary };
+      background-color: $secondary;
       color: #e7e7e7;
       border-radius: 12px;
       padding: 8px 16px 8px;
@@ -223,7 +224,7 @@ body {
     button {
       padding: 16px 4px;
       font-size: small;
-      background-color: #{ $secondary };
+      background-color: $secondary;
       border-radius: 8px;
       flex: 1 1;
       margin-left: 8px;
@@ -233,7 +234,7 @@ body {
         width: 32px;
         height: 32px;
         margin-bottom: 8px;
-        fill: #{ $white };
+        fill: $white;
       }
 
       span {
@@ -241,15 +242,15 @@ body {
       }
       
       &:hover {
-        background-color: #{ $secondaryFaded };
+        background-color: $secondaryFaded;
       }
 
       &.selected {
-        background-color: #{ $accent };
-        color: #{ $bgColor };
+        background-color: $accent;
+        color: $bgColor;
 
         svg {
-          fill: #{ $bgColor};
+          fill: $bgColor;
         }
       }
     }
@@ -295,7 +296,7 @@ body {
     left: 0;
     right: 0;
     margin-top: 8px;
-    background-color: #{ $primary };
+    background-color: $primary;
     color: #FFF;
     border-radius: 8px;
     overflow: hidden;
@@ -303,7 +304,7 @@ body {
   }
 
   .search-bar {
-    background-color: #{ $secondary };
+    background-color: $secondary;
     border-radius: 12px 12px;
     margin-bottom: auto;
     animation: fadeIn 0.32s forwards 1 cubic-bezier(0.215, 0.610, 0.355, 1);
@@ -315,7 +316,7 @@ body {
         width: 24px;
         height: 24px;
         flex: 1 1;
-        fill: #{ white };
+        fill: white;
       }
     }
   }
@@ -328,7 +329,7 @@ body {
   }
   
   .add-video-btn {
-    background-color: #{ $secondary };
+    background-color: $secondary;
     padding: 12px 16px;
     border-radius: 8px;
     flex: 1 1;
@@ -340,75 +341,13 @@ body {
       display: inline-block;
       vertical-align: middle;
       padding: 4px;
-      background-color: #{ $secondaryFaded };
+      background-color: $secondaryFaded;
     }
 
     svg {
       width: 32px;
       height: 32px;
-      fill: #{ $white };
-    }
-  }
-  
-  .video-box {
-    border-radius: 8px;
-    background-color: #{ $secondary };
-    color: #FFF;
-    padding: 8px 8px 16px;
-    margin-bottom: 8px;
-    overflow: hidden;
-    animation: fadeInUp 0.32s forwards 1 cubic-bezier(0.19, 1, 0.22, 1);
-
-    .inputs {
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-
-      .input {
-        flex: 1 1;
-
-        label {
-          background-color: #{ $secondaryFaded };
-          border-radius: 8px;
-          padding: 6px 12px;
-    
-          & > div {
-            flex: 1 1;
-          }
-    
-          b {
-            font-size: small;
-            display: table;
-            margin-bottom: 4px;
-          }
-    
-          input {
-            background-color: transparent;
-            display: block;
-            box-sizing: border-box;
-            width: 100%;
-            border: none;
-            font-size: 1.25rem;
-            color: #FFF;
-            padding: 8px;
-          }
-        }
-
-        &.url {
-          margin-right: 16px;
-        }
-      }
-
-      @media all and (max-width: 720px) {
-        flex-flow: column;
-
-        .input {
-          &.url {
-            margin-right: 0px;
-            margin-bottom: 8px;
-          }
-        }
-      }
+      fill: $white;
     }
   }
   
@@ -418,7 +357,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #{ $secondary };
+    background-color: $secondary;
     z-index: -1;
   }
   
@@ -445,15 +384,7 @@ body {
       display: table;
     }
   }
-  
-  .fetch-video-form {
-    padding: 16px 16px 0px;
-  }
-  
-  .fetch-video-form .top-input-wrapper label {
-    flex: 2 1;
-  }
-  
+
   .videos-section {
     flex: 1 1;
     
@@ -461,7 +392,7 @@ body {
       padding: 12px 0px;
       position: sticky;
       top: 0px;
-      background-color: #{ $bgColor };
+      background-color: $bgColor;
 
       h1 {
         white-space: nowrap;
@@ -476,13 +407,13 @@ body {
         margin-right: 6px;
 
         &:hover {
-          background-color: #{ $secondary };
+          background-color: $secondary;
         }
 
         svg {
           width: 32px;
           height: 32px;
-          fill: #{ $white };
+          fill: $white;
         }
       }
     }
@@ -526,50 +457,11 @@ body {
   
   .list-item .delete-btn svg {
     width: 16px;
-    fill: #{ $white }
+    fill: $white
   }
   
   .list-item .delete-btn:hover {
-    background-color: #{$secondary};
-  }
-
-  .video-box {
-    .empty {
-      margin-top: 48px;
-      margin-bottom: 48px;
-
-      header {
-        font-size: 1.25rem;
-      }
-    }
-
-    .cancel-btn {
-      color: #FFF;
-      display: table;
-      margin-top: 4px;
-      margin-right: 4px;
-      margin-left: auto;
-      box-sizing: border-box;
-      padding: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      right: 0px;
-      z-index: 2;
-      cursor: pointer;
-      border-radius: 50%;
-  
-      svg {
-        fill: #FFF;
-        width: 18px;
-        height: 18px;
-      }
-  
-      :hover {
-        opacity: 0.55;
-      }
-    }
+    background-color: $secondary;
   }
   
   .inner-form {
@@ -586,7 +478,7 @@ body {
     svg {
       width: 16px;
       height: 16px;
-      fill: #{ $white };
+      fill: $white;
     }
   }
   
@@ -609,7 +501,7 @@ body {
     right: 0;
     top: 50%;
     transform: translate(-50%, -50%);
-    background-color: #{ $primary };
+    background-color: $primary;
     padding: 16px 32px;
     border-radius: 16px;
     box-shadow: 0px 0px 32px -8px #1b1b1b;
@@ -648,7 +540,7 @@ body {
   }
   
   .video-organizer .video:hover {
-    background-color: #{ $secondaryFaded };
+    background-color: $secondaryFaded;
     opacity: 0.75;
   }
   
@@ -697,11 +589,11 @@ body {
       }
   
       &:hover {
-        background-color: #{ $secondaryFaded };
+        background-color: $secondaryFaded;
       }
 
       &.selected {
-        background-color: #{ $secondary };
+        background-color: $secondary;
       }
     }
   }
@@ -710,7 +602,7 @@ body {
     display: block;
     position: absolute;
     z-index: 999;
-    background-color: #{ $primary };
+    background-color: $primary;
     padding: 16px;
     width: 380px;
     margin-top: 8px;
@@ -731,7 +623,7 @@ body {
     border-radius: 8px;
 
     &:hover {
-      background-color: #{$secondaryFaded};
+      background-color: $secondaryFaded;
     }
   }
   
@@ -929,7 +821,7 @@ body {
       width: auto;
       left: 16px;
       right: 16px;
-      box-shadow: 0px 0px 32px -12px #{ $primary };
+      box-shadow: 0px 0px 32px -12px $primary;
       min-height: 100px;
     }
   }

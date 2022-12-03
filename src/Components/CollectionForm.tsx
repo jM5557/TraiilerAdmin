@@ -2,7 +2,7 @@ import React, { SyntheticEvent, useState, useContext } from "react";
 import { Categories } from "../util/common";
 import { Category, Video } from "../util/types";
 import { getThumbnail } from "../util/helpers";
-import FetchVideoForm from "./FetchVideoForm";
+import AddVideoForm from "./AddVideoForm";
 import { ReactComponent as GamesIcon } from "./../assets/icons/games-icon.svg";
 import { ReactComponent as MoviesIcon } from "./../assets/icons/movies-icon.svg";
 import { ReactComponent as TVShowsIcon } from "./../assets/icons/tv-shows-icon.svg";
@@ -86,25 +86,11 @@ const CollectionForm = (props: FormProps): JSX.Element => {
     ] = usePopup<HTMLDivElement>();
 
     const VideoBox: JSX.Element = (
-        <div className="video-box" ref={videoBoxRef}>
-            <button
-                type="button"
-                className="cancel-btn"
-                onClick={
-                    () => setDisplayVideoBox(false)
-                }
-            >
-                <XIcon />
-                <span className="hidden">
-                    Cancel
-                </span>
-            </button>
-            <FetchVideoForm
-                callbackFn={(v: Video) => {
-                    addVideo(v);
-                }}
-            />
-        </div>
+        <AddVideoForm
+            callbackFn={(v: Video) => {
+                addVideo(v);
+            }}
+        />
     );
 
     const addVideo: Function = (v: Video) => {
@@ -415,22 +401,9 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     </div>
                 </div>
                 <section className="videos-section">
+                    { VideoBox }
+                    
                     <div className="top flex x-between y-center" ref={videoBoxRef}>
-                        <button
-                                type="button"
-                                className="add-video-btn flex y-center x-center"
-                                onClick={
-                                    (e: SyntheticEvent) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setDisplayVideoBox(!displayVideoBox)
-                                    }
-                                }
-                            >
-                                <PlayIcon />
-                                <span>Add Video <b>{ videos.length}</b></span>
-                            </button>
-
                         <div className="flex y-center x-between">
                             {(videos.length > 1) &&
                                 <button
@@ -450,11 +423,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             }
                         </div>
                     </div>
-                    {(displayVideoBox) &&
-                        <>
-                            {VideoBox}
-                        </>
-                    }
+                    
                     <div className="list">
                         {
                             videos.map(

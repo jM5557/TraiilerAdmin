@@ -4,11 +4,11 @@ import { getVideoId, getThumbnail } from "../util/helpers";
 import { ReactComponent as SearchIcon } from "./../assets/icons/search-icon.svg";
 import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 
-interface FetchVideoFormProps {
+interface AddVideoFormProps {
     callbackFn: Function
 }
 
-const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props }): JSX.Element => {
+const AddVideoForm: React.FC<AddVideoFormProps> = ({ callbackFn, ...props }): JSX.Element => {
     const [url, setUrl] = useState<string>("");
     const [id, setVideoId] = useState<string | null>(null);
     const [title, setTitle] = useState<string>("");
@@ -29,8 +29,14 @@ const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props })
         if (submitRef) submitRef.current?.focus();
     }
 
+    const cancelForm = () => {
+        setVideoId(null);
+        setTitle("");
+        setUrl("");
+    }
+
     return (
-        <div className="fetch-video-form">
+        <div className="add-video-form">
             <div className="overlay"></div>
             <div className="bg-image"
                 style={{
@@ -53,8 +59,6 @@ const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props })
                         <header>Add a Video</header>
                     </div>
                 }
-
-                <div className="inputs">
                     <form
                         onSubmit={
                             (e: SyntheticEvent) => {
@@ -77,7 +81,6 @@ const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props })
                                             (e.target as HTMLInputElement).value
                                         )
                                     }
-                                    placeholder="Link or URL"
                                     autoFocus
                                     ref={inputRef}
                                 />
@@ -92,10 +95,10 @@ const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props })
                                             e.stopPropagation();
 
                                             setUrl("");
+                                            setVideoId(null);
                                         }
                                     }
                                 >
-                                    <XIcon />
                                     <span className="hidden">
                                         Clear
                                     </span>
@@ -109,7 +112,7 @@ const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props })
                                 }
                             >
                                 <SearchIcon />
-                                <span className="hidden">
+                                <span>
                                     Search
                                 </span>
                             </button>
@@ -143,46 +146,53 @@ const FetchVideoForm: React.FC<FetchVideoFormProps> = ({ callbackFn, ...props })
                                         }
                                     }
                                 >
-                                    <XIcon />
                                     <span className="hidden">
                                         Clear
                                     </span>
                                 </button>
                             }
                         </label>
-                    </div>
                 </div>
                 {(id && title.trim().length > 0) &&
-                    <button
-                        type="button"
-                        className="submit-btn"
-                        ref={submitRef}
-                        onClick={
-                            (e: SyntheticEvent) => {
-                                e.preventDefault();
-                                e.stopPropagation();
+                    <div className="buttons">    
+                        <button
+                            type = "button"
+                            onClick={ cancelForm }
+                            className = "cancel-btn"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className="add-btn"
+                            ref={submitRef}
+                            onClick={
+                                (e: SyntheticEvent) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
 
-                                if (inputRef) inputRef.current?.focus();
+                                    if (inputRef) inputRef.current?.focus();
 
-                                callbackFn({
-                                    id,
-                                    url,
-                                    title,
-                                    sourceTypeId
-                                });
+                                    callbackFn({
+                                        id,
+                                        url,
+                                        title,
+                                        sourceTypeId
+                                    });
 
-                                setUrl("");
-                                setVideoId(null);
-                                setTitle("");
+                                    setUrl("");
+                                    setVideoId(null);
+                                    setTitle("");
+                                }
                             }
-                        }
-                    >
-                        Add Video
-                    </button>
+                        >
+                            Add Video
+                        </button>
+                    </div>
                 }
             </div>
         </div>
     );
 }
 
-export default FetchVideoForm;
+export default AddVideoForm;

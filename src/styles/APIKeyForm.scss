@@ -23,7 +23,7 @@
     }
 
     .input-wrapper {
-        background-color: #{ $secondary };
+        background-color: $secondary;
         border-radius: 16px;
         box-sizing: border-box;
         width: 90vw;
@@ -48,13 +48,13 @@
         background-color: transparent;
 
         &:hover {
-            background-color: #{ $secondaryFaded };
+            background-color: $secondaryFaded;
         }
         
         svg {
             width: 24px;
             height: 24px;
-            fill: #{ white };
+            fill: white;
         }
     }
 
