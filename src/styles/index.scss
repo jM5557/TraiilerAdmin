@@ -176,7 +176,11 @@ body {
   }
   
   .y-end {
-    align-items:flex-end;
+    align-items: flex-end;
+  }
+
+  .y-start {
+    align-items: flex-start;
   }
 
   .empty {
@@ -190,6 +194,10 @@ body {
     }
   }
 
+  .top-bar {
+    margin-bottom: 24px;
+  }
+
   .id {
     display: table;
     font-size: small;
@@ -197,7 +205,6 @@ body {
     padding: 4px 8px;
     border-radius: 8px;
     background-color: $secondary;
-    margin-bottom: 8px;
   }
   
   .input-wrapper {
@@ -447,7 +454,7 @@ body {
   
   .list {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 16px;
     padding-bottom: 32px;
   }
@@ -491,6 +498,10 @@ body {
   
   .inner-form-wrapper {
     margin-right: 16px;
+
+    position: sticky;
+    align-self: flex-start;
+    top: 16px;
   }
   
   .clear-text-btn, .search-btn {
@@ -672,6 +683,11 @@ body {
     margin-right: auto;
   }
   
+  @media all and (max-width: 1440px) {
+    .list {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
   @media all and (max-width: 1215px) {
     .list-item {
       min-width: unset;
@@ -713,6 +729,8 @@ body {
   
     .inner-form-wrapper {
       margin-right: auto;
+      position: relative;
+      top: auto;
     }
     
     .list {
