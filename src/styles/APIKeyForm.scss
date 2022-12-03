@@ -27,6 +27,7 @@
         border-radius: 16px;
         box-sizing: border-box;
         width: 90vw;
+        max-width: 480px;
 
         &.flex {
             display: flex !important;

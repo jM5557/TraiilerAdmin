@@ -16,6 +16,7 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
         setShowError(false);
         setSubmitting(true);
         try {
+            console.log(process.env.REACT_APP_BASEURL);
             let results = await fetch(`${process.env.REACT_APP_BASEURL}/signin/${key.trim()}`, {
                 method: "POST",
                 headers: {
@@ -80,7 +81,6 @@ const APIKeyForm: React.FC<APIKeyFormProps> = (props): JSX.Element => {
                 </div>
             </div>
             {(showError) &&
-                // <div className="error">Something went wrong. Please try again.</div>
                 <div className="error">{errorLog}</div>
             }
         </form>
