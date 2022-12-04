@@ -9,11 +9,11 @@ import { ReactComponent as TVShowsIcon } from "./../assets/icons/tv-shows-icon.s
 import { ReactComponent as XIcon } from "./../assets/icons/x-icon.svg";
 import { ReactComponent as SortDownIcon } from "./../assets/icons/sort-down-icon.svg";
 import { VideoOrganizer } from "./VideoOrganizer";
-import usePopup from "../hooks/UsePopup";
 import { Action, CollectionFormContext } from "../util/context/CollectionForm";
 import { useCookies } from "react-cookie";
 import slugify from "slugify";
 import axios from "axios";
+import AddPosterForm from "./AddPosterForm";
 
 interface FormProps {
     submitType: string
@@ -50,6 +50,10 @@ export const loadCollection: Function = async (
             payload: data.categoryId
         });
         dispatch({
+            type: 'SET_POSTER_URL',
+            payload: data.posterUrl
+        });
+        dispatch({
             type: 'SET_VIDEOS',
             payload: data.videos
         });
@@ -71,6 +75,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
         title,
         slug,
         categoryId,
+        posterUrl,
         videos,
         submitted,
         removedVideos
@@ -78,17 +83,28 @@ const CollectionForm = (props: FormProps): JSX.Element => {
 
     const [displayOrganizer, setDisplayOrganizer] = useState<boolean>(false);
 
-    const [
-        videoBoxRef,
-        displayVideoBox,
-        setDisplayVideoBox
-    ] = usePopup<HTMLDivElement>();
-
     const VideoBox: JSX.Element = (
         <AddVideoForm
             callbackFn={(v: Video) => {
                 addVideo(v);
             }}
+        />
+    );
+
+    const PosterBox: JSX.Element = (
+        <AddPosterForm
+            callbackFn={(url: string | null) => {
+                dispatch({
+                    type: 'SET_POSTER_URL',
+                    payload: url
+                })
+            }}
+            initialPosterUrl={posterUrl}
+            collectionType = {
+                categoryId === 2 
+                    ? "tv" 
+                    : "movie"
+            }
         />
     );
 
@@ -152,12 +168,15 @@ const CollectionForm = (props: FormProps): JSX.Element => {
     const deleteCollection: Function = async (id: string) => {
         setDeleting(true);
         try {
-            let results = await fetch(`${process.env.REACT_APP_BASEURL}/delete/collection/${id}?key=${cookies['key']}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
+            let results = await fetch(
+                `${process.env.REACT_APP_BASEURL}/delete/collection/${id}?key=${cookies['key']}`, 
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
-            });
+            );
 
             if (!results.ok) throw new Error("Unable to delete");
 
@@ -303,9 +322,20 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     <br />
 
                     { VideoBox }
+                    
+                    { (categoryId > 0) &&
+                        <>
+                            <br />
+        
+                            { PosterBox }
+                        </>
+                    }
 
                     <div className="submit-btns">
-                        {(title.trim().length > 0 && slug.trim().length > 0 && !deleting) &&
+                        {(title.trim().length > 0 
+                            && slug.trim().length > 0 
+                            && !deleting
+                        ) &&
                             <button
                                 type="button"
                                 className={`submit-btn ${(submitted) ? "disabled" : ""}`}
@@ -322,7 +352,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                         try {
                                             if (props.submitType === "CREATE") {
                                                 await fetch(
-                                                    `${process.env.REACT_APP_BASEURL}/add/item?key=${cookies['key']}`,
+                                                    `${process.env.REACT_APP_BASEURL}/add/collection?key=${cookies['key']}`,
                                                     {
                                                         method: "POST",
                                                         headers: {
@@ -332,7 +362,8 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                                             item: {
                                                                 title: title.trim(),
                                                                 categoryId: categoryId,
-                                                                slug: slug.trim()
+                                                                slug: slug.trim(),
+                                                                posterUrl
                                                             },
                                                             videos: (
                                                                 videos.map(
@@ -365,7 +396,8 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                                                                 id: collectionId,
                                                                 title: title.trim(),
                                                                 categoryId: categoryId,
-                                                                slug: slug.trim()
+                                                                slug: slug.trim(),
+                                                                posterUrl
                                                             },
                                                             videos: (
                                                                 videos.map(
@@ -406,7 +438,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                 </div>
                 <section className="videos-section">
                     {(videos.length > 1) &&
-                        <div className="top flex x-end y-center" ref={videoBoxRef}>
+                        <div className="top flex x-end y-center">
                             <div className="flex y-center x-between">
                                     <button
                                         type="button"

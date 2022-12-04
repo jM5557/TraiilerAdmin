@@ -5,6 +5,7 @@ type AppState = {
     collectionId: number | null,
     title: string,
     slug: string,
+    posterUrl: string | null,
     categoryId: number,
     videos: Video[],
     submitted: boolean,
@@ -16,6 +17,7 @@ export type Action =
     | { type: 'SET_TITLE', payload: AppState['title'] }
     | { type: 'SET_SLUG', payload: AppState['slug'] }
     | { type: 'SET_CATEGORY_ID', payload: AppState['categoryId'] }
+    | { type: 'SET_POSTER_URL', payload: AppState['posterUrl'] }
     | { type: 'SET_VIDEOS', payload: AppState['videos'] }
     | { type: 'SET_SUBMITTED', payload: AppState['submitted'] }
     | { type: 'SET_REMOVED_VIDEOS', payload: AppState['removedVideos'] }
@@ -25,6 +27,7 @@ const initialState: AppState = {
     collectionId: null,
     title: "",
     slug: "",
+    posterUrl: null,
     categoryId: 0,
     videos: [],
     submitted: false,
@@ -55,6 +58,11 @@ const reducer = (
             return {
                 ...state,
                 categoryId: action.payload
+            }
+        case 'SET_POSTER_URL':
+            return {
+                ...state,
+                posterUrl: action.payload
             }
         case 'SET_VIDEOS':
             return {

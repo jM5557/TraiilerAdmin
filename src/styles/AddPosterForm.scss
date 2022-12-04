@@ -1,0 +1,18 @@
+.add-poster-form-results {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+
+    &:hover > img:not(:hover) {
+        opacity: 0.45;
+    }
+
+    img:not(:nth-of-type(1)) {
+        margin-left: 16px;
+    }
+    
+    img {
+        scroll-snap-align: start;
+        cursor: pointer;
+        transition: opacity 0.32s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+}

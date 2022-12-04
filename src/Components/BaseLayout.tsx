@@ -27,7 +27,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }): JSX.Element => {
                                 });
                             }
                         }
-                        className = { submitType === "CREATE" ? "selected create" : "create" }
+                        className = { 
+                            submitType === "CREATE" 
+                                ? "selected create" 
+                                : "create" 
+                            }
                     >
                         Create
                     </button>
@@ -36,7 +40,11 @@ const BaseLayout: React.FC<BaseLayoutProps> = ({ children }): JSX.Element => {
                         onClick={
                             () => setSubmitType("EDIT")
                         }
-                        className = { submitType === "EDIT" ? "selected" : "" }
+                        className = { 
+                            submitType === "EDIT" 
+                                ? "selected" 
+                                : "" 
+                            }
                     >
                         Edit
                     </button>
