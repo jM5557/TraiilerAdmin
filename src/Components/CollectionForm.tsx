@@ -302,6 +302,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                             (c: Category, index: number) => (
                                 <button
                                     type="button"
+                                    key = { index }
                                     className={`${index === state.categoryId ? "selected" : ""}`}
                                     onClick={
                                         () => {
@@ -324,11 +325,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                     { VideoBox }
                     
                     { (categoryId > 0) &&
-                        <>
-                            <br />
-        
-                            { PosterBox }
-                        </>
+                        <>{ PosterBox }</>
                     }
 
                     <div className="submit-btns">

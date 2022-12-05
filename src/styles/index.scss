@@ -398,7 +398,7 @@ body {
     position: relative;
     z-index: 1;
 
-    img {
+    & > img {
       width: 100%;
       max-width: 240px;
       border-radius: 8px;
@@ -685,7 +685,7 @@ body {
 
   .add-item-form-results {
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     margin-top: 16px;
 
     &:hover > .item:not(:hover) {
@@ -700,6 +700,15 @@ body {
         scroll-snap-align: start;
         cursor: pointer;
         transition: opacity 0.32s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    &.posters {
+      .item {
+        border-radius: 8px;
+        max-width: 160px;
+      }
+
+      padding-bottom: 16px;
     }
 }
   

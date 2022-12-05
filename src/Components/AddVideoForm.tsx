@@ -125,7 +125,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({
 
               fetchVideo(url);
             }}
-            className="input url"
+            className="input"
           >
             <label className="flex x-between y-center">
               <div>
@@ -171,7 +171,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({
 
         {searchType === "BY_TITLE" && (
           <form
-            className="input title"
+            className="input"
             onSubmit={(e: SyntheticEvent) => {
               e.preventDefault();
               e.stopPropagation();
@@ -218,14 +218,14 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({
           </form>
         )}
 
-        {searchType === "BY_TITLE" && (
+        {(searchType === "BY_TITLE" && results) && 
           <div
             className="
                         flex y-center x-start 
                         add-item-form-results videos
                     "
           >
-            {results?.map((r: Video, index: number) => (
+            {results.map((r: Video, index: number) => (
               <div key={index} className="item">
                 <img
                   alt="video thumbnail"
@@ -239,7 +239,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({
               </div>
             ))}
           </div>
-        )}
+        }
 
         {id && title.trim().length > 0 && (
           <div className="buttons">

@@ -5,7 +5,7 @@
     background-color: $secondary;
     color: #FFF;
     padding: 8px 8px;
-    margin-bottom: 8px;
+    margin-bottom: 22px;
     overflow: hidden;
     animation: fadeInUp 0.32s forwards 1 cubic-bezier(0.19, 1, 0.22, 1);
     
@@ -27,10 +27,6 @@
         flex: 1 1;
         border-radius: 8px;
         border: solid thin $secondaryFaded;
-
-        &.url {
-            margin-bottom: 8px;
-        }
 
         label {
             border-radius: 8px;
@@ -139,6 +135,10 @@
 
         img {
             display: block;
+            width: 100%;
+            max-width: 240px;
+            border-radius: 8px;
+            margin: 16px auto 16px;
         }
 
         p {
