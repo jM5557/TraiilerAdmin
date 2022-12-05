@@ -2,6 +2,7 @@ export interface Video {
     title: string,
     id: string,
     url: string,
+    urlId: string,
     sourceTypeId: number
 }
 

@@ -1,6 +1,5 @@
 @use './APIKeyForm.scss';
 @use './AddVideoForm.scss';
-@use './AddPosterForm.scss';
 
 @import './variables.scss';
 
@@ -403,7 +402,7 @@ body {
       width: 100%;
       max-width: 240px;
       border-radius: 8px;
-      margin: 0px auto 16px;
+      margin: 16px auto 16px;
       display: table;
     }
   }
@@ -683,6 +682,26 @@ body {
     min-width: 320px !important;
     margin-right: auto;
   }
+
+  .add-item-form-results {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-top: 16px;
+
+    &:hover > .item:not(:hover) {
+        opacity: 0.45;
+    }
+
+    .item:not(:nth-of-type(1)) {
+        margin-left: 16px;
+    }
+
+    .item {
+        scroll-snap-align: start;
+        cursor: pointer;
+        transition: opacity 0.32s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+}
   
   @media all and (max-width: 1440px) {
     .list {

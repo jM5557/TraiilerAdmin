@@ -69,8 +69,8 @@ const AddPosterForm: React.FC<AddPosterFormProps> = ({
             <div className="form-body">
                 {(url) &&
                     <>
-                        <small className="id">{url}</small>
                         <img alt="video thumbnail" src={ posterUrl(url) } />
+                        <small className="id">{url}</small>
                     </>
                 }
                 {(!url) &&
@@ -177,29 +177,34 @@ const AddPosterForm: React.FC<AddPosterFormProps> = ({
                             }
                         </label>
                 </div>
-
-                <br />
                 
-                <div className="flex y-center x-start add-poster-form-results">
-                    { 
-                        results?.map(
-                            (r: string, index: number) => (
-                                <img 
-                                    key = { index }
-                                    alt = "movie poster"
-                                    src = { posterUrl(r) }
-                                    tabIndex={0}
-                                    onClick = {
-                                        () => { 
-                                            setUrl(r);
-                                            callbackFn(posterUrl(r))
-                                        }
-                                    }
-                                />
-                            )
-                        )
-                    }
-                </div>
+                { (results) &&
+                    <> 
+                        <br />
+
+                        <div className="flex y-center x-start add-item-form-results posters">
+                            { 
+                                results?.map(
+                                    (r: string, index: number) => (
+                                        <img 
+                                            key = { index }
+                                            alt = "movie poster"
+                                            src = { posterUrl(r) }
+                                            tabIndex={0}
+                                            className = "item"
+                                            onClick = {
+                                                () => { 
+                                                    setUrl(r);
+                                                    callbackFn(posterUrl(r))
+                                                }
+                                            }
+                                        />
+                                    )
+                                )
+                            }
+                        </div>
+                    </>
+                }
 
                 {(url && url.trim().length > 0) &&
                     <div className="buttons">    
