@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import { Collection, Video } from "../types";
+import { Video } from "../types";
 
 type AppState = {
     collectionId: number | null,
@@ -38,6 +38,7 @@ const reducer = (
     state: AppState = initialState,
     action: Action
 ): AppState => {
+    console.log(action.payload);
     switch (action.type) {
         case 'SET_COLLECTION_ID':
             return {

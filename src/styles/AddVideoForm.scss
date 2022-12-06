@@ -13,6 +13,54 @@
         max-width: 512px;
     }
 
+    .save-btn {
+        margin-right: 0px;
+        margin-left: auto;
+        display: table;
+        padding: 8px 8px;
+        font-size: small;
+        margin-bottom: 8px;
+        color: rgb(139, 243, 139);
+        border-radius: 16px;
+        transition: opacity 0.32s cubic-bezier(0.19, 1, 0.22, 1);
+
+        &:hover, &:active {
+            opacity: 0.55;
+        }
+    }
+
+    .status-message {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: small;
+        padding: 8px 0px;
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            border-radius: 4px;
+            margin-left: 4px;
+
+            &:hover {
+                background-color: $bgColor;
+            }
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: #FFF;
+        }
+    }
+
+    .id {
+        display: table;
+        margin: auto;
+    }
+
     .empty {
         margin-top: 48px;
         margin-bottom: 48px;
@@ -21,7 +69,6 @@
             font-size: 1.25rem;
         }
     }
-
 
     .input {
         flex: 1 1;
@@ -132,6 +179,23 @@
     .item {
         min-width: 240px;
         max-width: 240px;
+
+        button {
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+
+            &:hover {
+                background-color: $bgColor;
+            }
+        }
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: #FFF;
+        }
 
         img {
             display: block;
