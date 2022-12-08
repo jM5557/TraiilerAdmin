@@ -9,7 +9,7 @@ type AppState = {
     categoryId: number,
     videos: Video[],
     submitted: boolean,
-    removedVideos: string[]
+    removedVideos: number[]
 }
 
 export type Action =

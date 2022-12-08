@@ -1,6 +1,6 @@
 export interface Video {
     title: string,
-    id: string,
+    id: number,
     url: string,
     urlId: string,
     sourceTypeId: number

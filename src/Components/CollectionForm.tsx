@@ -143,7 +143,7 @@ const CollectionForm = (props: FormProps): JSX.Element => {
         })
     }
 
-    const deleteVideo: Function = (id: string) => {
+    const deleteVideo: Function = (id: number) => {
         if (props.submitType === "EDIT")
             dispatch({
                 type: 'SET_REMOVED_VIDEOS',
