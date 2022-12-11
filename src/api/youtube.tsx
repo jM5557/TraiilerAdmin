@@ -1,12 +1,12 @@
 import axios from "axios";
 
-interface YoutubeAPI {
+interface YoutubeAPIProps {
     getVideoById: Function
 }
 
-const youtubeAPI: YoutubeAPI = {
-    getVideoById: (id: string) => {
-        return axios.get(
+const YoutubeAPI: YoutubeAPIProps = {
+    getVideoById: 
+        (id: string) => axios.get(
             "https://www.googleapis.com/youtube/v3/videos",
             {
                 params: {
@@ -15,8 +15,7 @@ const youtubeAPI: YoutubeAPI = {
                     key: process.env.REACT_APP_YT_API_KEY
                 }
             }
-        );
-    }
+        )
 }
 
-export default youtubeAPI;
+export default YoutubeAPI;

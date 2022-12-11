@@ -1,0 +1,74 @@
+@import './variables.scss';
+
+.genres, .selected-genres {
+    
+
+    .genre {
+        padding: 4px 16px;
+        white-space: nowrap;
+        display: block;
+        font-size: small;
+        font-family: 'Montserrat', sans-serif;
+
+        span {
+            line-height: 0px;
+        }
+
+        button {
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 8px;
+
+            &:hover {
+                background-color: $primary;
+            }
+        }
+
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: #FFF;
+        }
+    }
+}
+
+.genres {
+    background-color: $secondaryFaded;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    max-height: 180px;
+    overflow: auto;
+
+    .genre {
+        padding: 16px;
+        display: block;
+        width: 100%;
+        border-radius: 8px;
+        text-align: left;
+
+        &:hover {
+            background-color: $secondary;
+        }
+    }
+}
+
+.selected-genres {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: row wrap;
+
+    .genre {
+        background-color: $secondaryFaded;
+        margin: 4px;
+        border-radius: 500px;
+
+        &.flex {
+            display: flex;
+        }
+    }
+}

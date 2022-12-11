@@ -148,7 +148,6 @@ const AddPosterForm: React.FC<AddPosterFormProps> = ({
                       window.setTimeout(() => {
                         if (resultsContainerRef && resultsContainerRef.current)
                           resultsContainerRef.current.scrollLeft = 0;
-                        console.log("Foobar");
                       }, 400)
                     );
                   }}

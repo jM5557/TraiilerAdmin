@@ -2,6 +2,7 @@
 @use './AddVideoForm.scss';
 
 @import './variables.scss';
+@import './Genres.scss';
 
 input:focus {
   outline: none;
@@ -275,6 +276,10 @@ body {
           fill: $bgColor;
         }
       }
+    }
+
+    @media all and (max-width: 512px) {
+      button { font-size: x-small; }
     }
   }
   
