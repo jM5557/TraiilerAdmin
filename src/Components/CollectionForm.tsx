@@ -328,6 +328,8 @@ const CollectionForm = (props: FormProps): JSX.Element => {
                         <>{ PosterBox }</>
                     }
 
+                    <br />
+
                     <div className="submit-btns">
                         {(title.trim().length > 0 
                             && slug.trim().length > 0 

@@ -6,7 +6,6 @@ interface YoutubeAPI {
 
 const youtubeAPI: YoutubeAPI = {
     getVideoById: (id: string) => {
-        console.log(process.env.REACT_APP_YT_API_KEY);
         return axios.get(
             "https://www.googleapis.com/youtube/v3/videos",
             {

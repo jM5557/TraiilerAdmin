@@ -9,7 +9,10 @@ interface AddVideoFormProps {
   callbackFn: Function;
 }
 
-const getVideos = async (title: string, apiKey: string) => {
+const getVideos = async (
+  title: string, 
+  apiKey: string
+) => {
   let results = await fetch(
     `${process.env.REACT_APP_BASEURL}/search/video/${encodeURI(
       title
@@ -63,6 +66,7 @@ const AddVideoForm: React.FC<AddVideoFormProps> = ({
 
     if (!fetchResults) throw new Error("Unable to fetch videos");
 
+    console.log(fetchResults);
     setResults(fetchResults);
   };
 

@@ -18,3 +18,8 @@ export interface Category {
     id: number,
     text: string
 }
+
+export interface Genre {
+    id: number,
+    text: string
+}
